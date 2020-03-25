@@ -8,22 +8,22 @@
             <!-- 输入框 -->
             <label class="login_user">
                 <div class="country_list">
-                    <div class="countrycode_selector" >
+                    <div class="countrycode_selector">
             <span class="country_code">
               <tt class="countrycode-value">+86</tt>
               <i class="icon_arrow_down"></i>
             </span>
                     </div>
                 </div>
-                <input class="item_account" autocomplete="off" type="text" >
+                <input class="item_account" autocomplete="off" type="text">
             </label>
             <label class="pwd_panel">
                 <input class="item_account" placeholder="密码" autocomplete="off">
-                <i class="iconfont" ></i>
+                <i class="iconfont"></i>
             </label>
             <label class="pwd_panel">
-                <input class="item_account" type="number" placeholder="短信验证码" autocomplete="off" >
-                <a href="javascript:;" class="sms_code" >{{codeMsg}}</a>
+                <input class="item_account" type="number" placeholder="短信验证码" autocomplete="off">
+                <a href="javascript:;" class="sms_code">{{codeMsg}}</a>
             </label>
             <!-- 错误信息 -->
             <div class="err_tip">
@@ -33,13 +33,13 @@
             </div>
             <div class="btns_bg">
                 <!-- <input class="btnadpt" type="button" :value="mainBtn" @click="submit"> -->
-                <button  class="btnadpt" >
+                <button class="btnadpt">
                     <i></i>
-                    登录
+                    {{submitMessage}}
                 </button>
             </div>
             <div class="other_panel">
-                <a href="javascript:;" class="btnadpt btn_gray" >手机短信登录注册</a>
+                <a href="javascript:;" class="btnadpt btn_gray" @click="triggerLoginMethod">{{triggerMessage}}</a>
                 <div class="reverse">
                     <div class="n_links_area">
                         <a class="outer-link">立即注册</a>
@@ -48,15 +48,19 @@
                     </div>
                 </div>
                 <!-- 其他登录方式 s -->
-                <div  class="other_login_type">
+                <div class="other_login_type">
                     <fieldset class="oth_type_tit">
                         <legend align="center" class="oth_type_txt">其他方式登录</legend>
                     </fieldset>
                     <div class="oth_type_links">
-                        <a class="icon_type btn_qq" data-type="qq"  title="QQ登录" target="_blank"><i class="btn_sns_icontype icon_default_qq"></i></a>
-                        <a class="icon_type btn_weibo" data-type="weibo"  title="微博登录" target="_blank"><i class="btn_sns_icontype icon_default_weibo"></i></a>
-                        <a class="icon_type btn_alipay" data-type="alipay"  title="支付宝登录" target="_blank"><i class="btn_sns_icontype icon_default_alipay"></i></a>
-                        <a class="icon_type btn_weixin" data-type="weixin"  title="微信登录" target="_blank"><i class="btn_sns_icontype icon_default_weixin"></i></a>
+                        <a class="icon_type btn_qq" data-type="qq" title="QQ登录" target="_blank"><i
+                                class="btn_sns_icontype icon_default_qq"></i></a>
+                        <a class="icon_type btn_weibo" data-type="weibo" title="微博登录" target="_blank"><i
+                                class="btn_sns_icontype icon_default_weibo"></i></a>
+                        <a class="icon_type btn_alipay" data-type="alipay" title="支付宝登录" target="_blank"><i
+                                class="btn_sns_icontype icon_default_alipay"></i></a>
+                        <a class="icon_type btn_weixin" data-type="weixin" title="微信登录" target="_blank"><i
+                                class="btn_sns_icontype icon_default_weixin"></i></a>
                     </div>
                 </div>
             </div>
@@ -71,7 +75,20 @@
 
     @Component
     export default class MailLogin extends Vue {
-        codeMsg='获取验证码'
+        codeMsg = '获取验证码'
+        // 默认手机号码登录
+        loginwithUserName = false
+
+        get submitMessage() {
+            return this.loginwithUserName ? '登录' : '立即登录注册'
+        }
+        get triggerMessage(){
+            return this.loginwithUserName ? '手机短信登录/注册' :'用户名密码登录'
+        }
+
+        triggerLoginMethod() {
+            this.loginwithUserName = !this.loginwithUserName
+        }
     }
 
 </script>
@@ -82,10 +99,12 @@
         box-sizing: border-box;
         display: block;
     }
+
     .header_tit {
         padding: 30px 0 10px;
         text-align: center;
     }
+
     .milogo {
         width: 48px;
         height: 48px;
@@ -93,18 +112,22 @@
         display: block;
         background-image: url(../assets/images/milogo.png);
     }
+
     .header_tit_txt {
         font-size: 16px;
         font-weight: normal;
     }
+
     .login_user, .pwd_panel {
         display: flex;
         align-items: center;
         border-bottom: 1px solid #d3d3d3;
     }
+
     .pwd_panel {
         justify-content: space-between;
     }
+
     .country_list {
         padding: 1px 10px 1px 0;
         margin-right: 8px;
@@ -112,10 +135,12 @@
         display: block;
         overflow: hidden;
     }
+
     .countrycode_selector {
         position: relative;
         animation: fade-in ease-in-out .5s;
     }
+
     @keyframes fade-in {
         0% {
             left: -100%;
@@ -124,15 +149,18 @@
             left: 0;
         }
     }
+
     .country_code {
         display: flex;
         align-items: center;
     }
+
     .countrycode-value {
         margin-right: 2px;
         color: #9b9b9b;
         font-size: 16px;
     }
+
     .icon_arrow_down {
         display: block;
         width: 6px;
@@ -143,13 +171,16 @@
         -webkit-transform: rotate(-135deg);
         transform: rotate(-135deg);
     }
+
     .item_account {
         padding: 16px 0;
     }
+
     .sms_code {
         color: #2ea5e5;
         font-size: 14px;
     }
+
     .err_tip {
         margin-bottom: 5px;
         padding-top: 14px;
@@ -157,14 +188,17 @@
         text-align: left;
         font-size: 14px;
     }
+
     .icon_error {
         font-size: 16px;
         margin-right: 5px;
         color: #ff6700;
     }
+
     .btns_bg {
         padding-top: 24px;
     }
+
     .btnadpt {
         width: 100%;
         padding: 12px 0;
@@ -177,32 +211,39 @@
         border-radius: 6px;
         background-color: #ff6700;
     }
+
     .btn_gray {
         background: #fff;
         margin-top: 10px;
         border: 1px solid #d3d3d3;
         color: #000;
     }
+
     .n_links_area {
         text-align: center;
         color: #646464;
     }
+
     .outer-link {
         padding: 0 9px;
         color: #646464;
     }
+
     .other_login_type {
         padding-top: 40px;
     }
+
     .oth_type_tit {
         border-top: 1px solid #f2f2f2;
         padding-top: 10px;
     }
+
     .oth_type_txt {
         font-size: 12px;
         color: #b0b0b0;
         width: 80px;
     }
+
     .icon_type {
         width: 30px;
         height: 30px;
@@ -210,18 +251,23 @@
         display: inline-block;
         border-radius: 50%;
     }
+
     .btn_qq {
         background-color: #72c7db;
     }
+
     .btn_weibo {
         background-color: #ed9090;
     }
+
     .btn_alipay {
         background-color: #6bb6ea;
     }
+
     .btn_weixin {
         background-color: #00be00;
     }
+
     .btn_sns_icontype {
         background: url(../assets/images/icons_type.png) no-repeat;
         display: block;
@@ -229,27 +275,34 @@
         height: 18px;
         margin: 5px auto 0;
     }
+
     .icon_default_qq {
         background-position: -19px 0;
     }
+
     .icon_default_weibo {
         background-position: -38px 0;
     }
+
     .icon_default_alipay {
         background-position: -57px 0;
         width: 26px;
     }
+
     .icon_default_weixin {
         width: 23px;
         background-position: -84px 0;
     }
+
     .icon-kanjianmima- {
         color: #ff6700;
     }
+
     .icon-loading {
         display: inline-block;
         animation: rotating 2s linear infinite;
     }
+
     @keyframes rotating {
         0% {
             transform: rotate(0deg);
@@ -258,10 +311,12 @@
             transform: rotate(1turn);
         }
     }
+
     .is_loading {
         position: relative;
         pointer-events: none;
     }
+
     .is_loading::before {
         pointer-events: none;
         content: "";
@@ -271,13 +326,15 @@
         right: -1px;
         bottom: -1px;
         border-radius: inherit;
-        background-color: hsla(0,0%,100%,.35);
+        background-color: hsla(0, 0%, 100%, .35);
     }
-    .btn_gray{
+
+    .btn_gray {
         display: block;
         height: 20px;
     }
-    .oth_type_links{
+
+    .oth_type_links {
         text-align: center;
     }
 </style>
