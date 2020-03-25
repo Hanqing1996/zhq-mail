@@ -5,21 +5,9 @@
             <h4 class="header_tit_txt">小米帐号登录</h4>
         </div>
         <div>
-            <LoginInputs/>
+            <LoginInputs :loginwithUserName="loginwithUserName"/>
 
-            <!-- 错误信息 -->
-            <div class="err_tip">
-                <!-- <em class="icon_error">err</em> -->
-                <i></i>
-                <span class="error-con">{{errMsg}}</span>
-            </div>
-            <div class="btns_bg">
-                <!-- <input class="btnadpt" type="button" :value="mainBtn" @click="submit"> -->
-                <button class="btnadpt">
-                    <i></i>
-                    {{submitMessage}}
-                </button>
-            </div>
+
             <div class="other_panel">
                 <a href="javascript:;" class="btnadpt btn_gray" @click="triggerLoginMethod">{{triggerMessage}}</a>
                 <div class="reverse">
@@ -54,17 +42,13 @@
 <script lang="ts">
     import Vue from 'vue'
     import {Component, Prop} from "vue-property-decorator";
-    import LoginInputs from "@/components/LoginInputs.vue";
+    import LoginInputs from "@/components/LoginForm.vue";
 
     @Component({components: {LoginInputs}})
     export default class MailLogin extends Vue {
-        codeMsg = '获取验证码'
         // 默认手机号码登录
         loginwithUserName = false
 
-        get submitMessage() {
-            return this.loginwithUserName ? '登录' : '立即登录注册'
-        }
         get triggerMessage(){
             return this.loginwithUserName ? '手机短信登录/注册' :'用户名密码登录'
         }
@@ -99,24 +83,6 @@
     .header_tit_txt {
         font-size: 16px;
         font-weight: normal;
-    }
-
-    .err_tip {
-        margin-bottom: 5px;
-        padding-top: 14px;
-        color: #F66;
-        text-align: left;
-        font-size: 14px;
-    }
-
-    .icon_error {
-        font-size: 16px;
-        margin-right: 5px;
-        color: #ff6700;
-    }
-
-    .btns_bg {
-        padding-top: 24px;
     }
 
     .btnadpt {
