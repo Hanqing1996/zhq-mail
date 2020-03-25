@@ -4,7 +4,12 @@ if (NODE_ENV === 'development' || (NODE_ENV === 'production' && VUE_APP_API === 
     host = 'http://rap2.taobao.org/app/mock/248336/'
 }
 
-const url = {
+
+type URL={
+    [key:string]:string
+}
+
+const url:URL = {
     login: '/user/login',
     logout: '/user/logout',
     userInfo: '/user/userInfo',
@@ -35,6 +40,8 @@ const url = {
     orderList: '/order/list',
     orderView: '/order/view'
 }
+
+
 
 Object.keys(url).forEach(key => {
     url[key] = host + url[key]

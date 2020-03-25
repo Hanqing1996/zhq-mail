@@ -77,7 +77,9 @@
             }
 
 
-            // this.$fetch('getCode', { username: this.username }).then(res => {
+            this.$fetch('getCode', { username: this.userName }).then((res: any) => {
+                console.log('res');
+                console.log(res);
                 this.timer = setInterval(() => {
                     this.countdown--
                     if (this.countdown === 0) {
@@ -86,7 +88,7 @@
                     }
                 }, 1000)
 
-            // })
+            })
         }
         checkMobile () {
             const reg = /^((1[3-8][0-9])+\d{8})$/
