@@ -10,20 +10,19 @@
             </span>
                 </div>
             </div>
-            <input class="item_account" :placeholder="userName" type="text" @input="clearError">
+            <input class="item_account" :placeholder="usernamePlaceholder" type="text" @input="clearError" v-model="userName">
         </label>
         <label class="pwd_panel">
-            <input class="item_account" type="number" :placeholder="password" @input="clearError">
-            <a v-if="!loginwithUserName" class="sms_code" >获取验证码</a>
+            <input class="item_account" type="number" :placeholder="passwordPlaceholder" @input="clearError" v-model="password">
+            <a v-if="!loginwithUserName" class="sms_code" @click="getCode">{{codeMsg}}</a>
         </label>
         <!-- 错误信息 -->
-        <div class="err_tip" v-if="1+2===4">
+        <div class="err_tip" v-if="errMsg">
             <!-- <em class="icon_error">err</em> -->
-            <i></i>
+            <i class="icon_error iconfont icon-error"></i>
             <span class="error-con">{{errMsg}}</span>
         </div>
         <div class="btns_bg">
-            <!-- <input class="btnadpt" type="button" :value="mainBtn" @click="submit"> -->
             <button class="btnadpt">
                 <i></i>
                 {{submitMessage}}
@@ -38,24 +37,65 @@
 
     @Component
     export default class LoginForm extends Vue {
+        errMsg=''
+        countdown=0
+        userName=''
+        password=''
+        timer=0
         @Prop(Boolean) readonly loginwithUserName!: boolean
-        @Prop({default: 60}) readonly countdown!: Number
+        @Prop({default: 60}) readonly maxCountdown!: number
 
-        get userName() {
+        get usernamePlaceholder() {
             return this.loginwithUserName ? '邮箱/手机号码/小米ID' : '手机号码'
         }
 
-        get password() {
+        get passwordPlaceholder() {
             return this.loginwithUserName ? '密码' : '短信验证码'
         }
 
         get submitMessage() {
             return this.loginwithUserName ? '登录' : '立即登录注册'
         }
+        get codeMsg(){
+            return this.countdown===this.maxCountdown?'获取验证码':`重新发送${this.countdown}`
+        }
+
+        created(){
+            this.countdown=this.maxCountdown
+        }
+
+        getCode () {
+            // 已发送验证码，则点击无效
+            if (this.countdown !== 60) return
+            if (!this.userName) {
+                this.errMsg = '请输入手机号'
+                return
+            }
+            if (!this.checkMobile()) {
+                this.errMsg = '手机号码格式不正确'
+                return
+            }
+
+
+            // this.$fetch('getCode', { username: this.username }).then(res => {
+                this.timer = setInterval(() => {
+                    this.countdown--
+                    if (this.countdown === 0) {
+                        clearInterval(this.timer)
+                        this.countdown = 60
+                    }
+                }, 1000)
+
+            // })
+        }
+        checkMobile () {
+            const reg = /^((1[3-8][0-9])+\d{8})$/
+            return reg.test(this.userName)
+        }
 
 
         clearError(){
-
+            this.errMsg=''
         }
     }
 
