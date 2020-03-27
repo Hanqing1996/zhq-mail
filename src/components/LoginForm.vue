@@ -140,7 +140,7 @@
                         this.$store.commit('setUserInfo', res.data.user)
                         // 登录完成后，我们希望是回到原来页。
                         let path = this.$route.query.redirect || '/user'
-                        // this.$router.push(path)
+                        this.$router.push(path)
                     })
                 } else {
                     this.errMsg = res.data.message
