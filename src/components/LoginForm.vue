@@ -10,10 +10,12 @@
             </span>
                 </div>
             </div>
-            <input class="item_account" :placeholder="usernamePlaceholder" type="text" @input="clearError" v-model="userName">
+            <input class="item_account" :placeholder="usernamePlaceholder" type="text" @input="clearError"
+                   v-model="userName">
         </label>
         <label class="pwd_panel">
-            <input class="item_account" type="number" :placeholder="passwordPlaceholder" @input="clearError" v-model="password">
+            <input class="item_account" type="number" :placeholder="passwordPlaceholder" @input="clearError"
+                   v-model="password">
             <a v-if="!loginwithUserName" class="sms_code" @click="getCode">{{codeMsg}}</a>
         </label>
         <!-- 错误信息 -->
@@ -23,8 +25,7 @@
             <span class="error-con">{{errMsg}}</span>
         </div>
         <div class="btns_bg">
-            <button class="btnadpt">
-                <i></i>
+            <button class="btnadpt" @click="submit">
                 {{submitMessage}}
             </button>
         </div>
@@ -37,11 +38,11 @@
 
     @Component
     export default class LoginForm extends Vue {
-        errMsg=''
-        countdown=0
-        userName=''
-        password=''
-        timer=0
+        errMsg = ''
+        countdown = 0
+        userName = ''
+        password = ''
+        timer = 0
         @Prop(Boolean) readonly loginwithUserName!: boolean
         @Prop({default: 60}) readonly maxCountdown!: number
 
@@ -56,15 +57,16 @@
         get submitMessage() {
             return this.loginwithUserName ? '登录' : '立即登录注册'
         }
-        get codeMsg(){
-            return this.countdown===this.maxCountdown?'获取验证码':`重新发送${this.countdown}`
+
+        get codeMsg() {
+            return this.countdown === this.maxCountdown ? '获取验证码' : `重新发送${this.countdown}`
         }
 
-        created(){
-            this.countdown=this.maxCountdown
+        created() {
+            this.countdown = this.maxCountdown
         }
 
-        getCode () {
+        getCode() {
             // 已发送验证码，则点击无效
             if (this.countdown !== 60) return
             if (!this.userName) {
@@ -77,9 +79,7 @@
             }
 
 
-            this.$fetch('getCode', { username: this.userName }).then((res: any) => {
-                console.log('res');
-                console.log(res);
+            this.$fetch('getCode', {username: this.userName}).then((res: any) => {
                 this.timer = setInterval(() => {
                     this.countdown--
                     if (this.countdown === 0) {
@@ -90,14 +90,71 @@
 
             })
         }
-        checkMobile () {
+
+        checkMobile() {
             const reg = /^((1[3-8][0-9])+\d{8})$/
             return reg.test(this.userName)
         }
 
+        submit() {
+            // 手机号码登录
+            if (!this.loginwithUserName) {
+                if (!this.userName) {
+                    this.errMsg = '请输入手机号'
+                    return
+                }
+                if (!this.checkMobile()) {
+                    this.errMsg = '手机号码格式不正确'
+                    return
+                }
+                if (!this.password) {
+                    this.errMsg = '请输入短信验证码'
+                    return
+                }
+            } else {
+                if (!this.userName) {
+                    this.errMsg = '请输入账号'
+                    return
+                }
+                if (!this.password) {
+                    this.errMsg = '请输入密码'
+                    return
+                }
+            }
+            type Data={
+                userName:string,
+                password?:string
+                code?:string
+            }
 
-        clearError(){
-            this.errMsg=''
+            let data:Data = {
+                userName: this.userName,
+                code:!this.loginwithUserName&&this.password||undefined,
+                password:this.loginwithUserName&&this.password||undefined
+            }
+            this.$fetch('login', data).then(res => {
+                let status = res.status
+                if (status === 200) {
+                    console.log('成功登录')
+                    this.$fetch('userInfo',{userName:this.userName}).then(res => {
+                        this.$store.commit('setUserInfo', res.data.user)
+                        // 登录完成后，我们希望是回到原来页。
+                        let path = this.$route.query.redirect || '/user'
+                        // this.$router.push(path)
+                    })
+                } else {
+                    this.errMsg = res.data.message
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+
+            console.log('登录成功!');
+        }
+
+
+        clearError() {
+            this.errMsg = ''
         }
     }
 
@@ -163,17 +220,14 @@
         text-align: left;
         font-size: 14px;
     }
-
     .icon_error {
         font-size: 16px;
         margin-right: 5px;
         color: #ff6700;
     }
-
     .btns_bg {
         padding-top: 24px;
     }
-
     .btnadpt {
         width: 100%;
         padding: 12px 0;
