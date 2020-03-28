@@ -22,34 +22,21 @@
                         </div>
                     </div>
                     <div class="nav">
-                        <div class="nav-item">
-                            <span style="color: rgb(237, 91, 0); border-color: rgb(237, 91, 0);">推荐</span>
-                        </div>
-                        <div class="nav-item">
-                            <span style="color: rgb(116, 116, 116); border-color: rgb(242, 242, 242);">手机</span>
-                        </div>
-                        <div class="nav-item">
-                            <span style="color: rgb(116, 116, 116); border-color: rgb(242, 242, 242);">智能</span>
-                        </div>
-                        <div class="nav-item">
-                            <span style="color: rgb(116, 116, 116); border-color: rgb(242, 242, 242);">电视</span>
-                        </div>
-                        <div class="nav-item">
-                            <span style="color: rgb(116, 116, 116); border-color: rgb(242, 242, 242);">电脑</span>
-                        </div>
-                        <div class="nav-item">
-                            <span style="color: rgb(116, 116, 116); border-color: rgb(242, 242, 242);">双摄</span>
-                        </div>
-                        <div class="nav-item">
-                            <span style="color: rgb(116, 116, 116); border-color: rgb(242, 242, 242);">全面屏</span>
-                        </div>
-                        <div class="nav-item">
-                            <span style="color: rgb(116, 116, 116); border-color: rgb(242, 242, 242);">生活周边</span>
-                        </div>
-                        <div class="nav-item">
-                            <span style="color: rgb(116, 116, 116); border-color: rgb(242, 242, 242);">盒子</span>
+                        <div class="nav-item" v-for="nav in navList" :key="nav.name">
+                            <span style="color: rgb(237, 91, 0); border-color: rgb(242, 242, 242);">{{nav.name}}</span>
                         </div>
                     </div>
+
+
+
+
+
+
+
+
+
+
+
                 </header>
                 <div class="page-wrap">
                     <div class="bodys">
@@ -61,6 +48,33 @@
     </div>
 </template>
 
+<script lang="ts">
+    import Vue from 'vue'
+    import {Component, Prop} from "vue-property-decorator";
+    import LoginInputs from "@/components/LoginForm.vue";
+
+    @Component({components: {LoginInputs}})
+    export default class MailLogin extends Vue {
+        navList = []
+
+        getNavList() {
+            this.$fetch('navList', {}).then(res => {
+                this.setNavList(res)
+            })
+        }
+
+        created() {
+            this.getNavList()
+        }
+
+        setNavList(res: any) {
+            this.navList=res.data.list
+        }
+    }
+
+</script>
+
+
 <style scoped lang="scss">
     .header {
         position: fixed;
@@ -68,7 +82,7 @@
         left: 0;
         right: 0;
         z-index: 99;
-        box-shadow: 0 2px 4px -1px rgba(0,0,0,.2);
+        box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .2);
         background: #f2f2f2;
     }
     .app-header-item img {
@@ -80,7 +94,7 @@
         align-items: center;
         border: 1px solid #e5e5e5;
         text-align: left;
-        color: rgba(0,0,0,.3);
+        color: rgba(0, 0, 0, .3);
         background-color: #fff;
         border-radius: 4px;
         height: 32px;
@@ -123,19 +137,19 @@
         line-height: 800px;
         font-size: 72px;
     }
-    .app-header-wrapper{
+    .app-header-wrapper {
         display: flex;
         align-items: center;
         justify-content: space-around;
     }
-    .app-header-middle{
+    .app-header-middle {
         flex-grow: 1;
     }
-    .app-header-item{
+    .app-header-item {
         margin: 0 10px;
     }
-    .logo{
-        img{
+    .logo {
+        img {
             width: 1.5em;
             height: 1em;
         }

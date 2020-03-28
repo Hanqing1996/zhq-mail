@@ -5,8 +5,7 @@
             <h4 class="header_tit_txt">帐号登录</h4>
         </div>
         <div>
-            <LoginInputs :loginwithUserName="loginwithUserName"/>
-
+            <LoginForm :loginwithUserName="loginwithUserName"/>
 
             <div class="other_panel">
                 <a href="javascript:;" class="btnadpt btn_gray" @click="triggerLoginMethod">{{triggerMessage}}</a>
@@ -42,9 +41,9 @@
 <script lang="ts">
     import Vue from 'vue'
     import {Component, Prop} from "vue-property-decorator";
-    import LoginInputs from "@/components/LoginForm.vue";
+    import LoginForm from "@/components/LoginForm.vue";
 
-    @Component({components: {LoginInputs}})
+    @Component({components: {LoginForm}})
     export default class MailLogin extends Vue {
         // 默认手机号码登录
         loginwithUserName = false
