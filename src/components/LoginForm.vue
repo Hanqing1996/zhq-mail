@@ -35,6 +35,7 @@
 <script lang="ts">
     import Vue from 'vue'
     import {Component, Prop} from "vue-property-decorator";
+    import debounce from "@/helpers/debounce";
 
     @Component
     export default class LoginForm extends Vue {
@@ -65,15 +66,6 @@
 
         created() {
             this.countdown = this.maxCountdown
-
-            function debounce(fn: Function, wait: number) {
-                let timer: null | number = null
-                return function () {
-                    if (timer)
-                        clearTimeout(timer)
-                    timer = setTimeout(fn, wait)
-                }
-            }
             this.fn=debounce(this.verify,5000)
         }
 
@@ -161,9 +153,7 @@
         }
 
         onSubmit() {
-            if(this.fn){
-                this.fn()
-            }
+            this.fn&&this.fn()
         }
 
         clearError() {
