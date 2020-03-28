@@ -25,7 +25,7 @@
             <span class="error-con">{{errMsg}}</span>
         </div>
         <div class="btns_bg">
-            <button class="btnadpt" @click="submit">
+            <button class="btnadpt" @click="onSubmit">
                 {{submitMessage}}
             </button>
         </div>
@@ -43,6 +43,7 @@
         userName = ''
         password = ''
         timer = 0
+        fn:null|Function=null
         @Prop(Boolean) readonly loginwithUserName!: boolean
         @Prop({default: 60}) readonly maxCountdown!: number
 
@@ -64,10 +65,20 @@
 
         created() {
             this.countdown = this.maxCountdown
+
+            function debounce(fn: Function, wait: number) {
+                let timer: null | number = null
+                return function () {
+                    if (timer)
+                        clearTimeout(timer)
+                    timer = setTimeout(fn, wait)
+                }
+            }
+            this.fn=debounce(this.verify,5000)
         }
 
         getCode() {
-            // 已发送验证码，则点击无效
+            // 点击验证码的行为要做节流
             if (this.countdown !== 60) return
             if (!this.userName) {
                 this.errMsg = '请输入手机号'
@@ -77,7 +88,6 @@
                 this.errMsg = '手机号码格式不正确'
                 return
             }
-
 
             this.$fetch('getCode', {username: this.userName}).then((res: any) => {
                 this.timer = setInterval(() => {
@@ -96,7 +106,8 @@
             return reg.test(this.userName)
         }
 
-        submit() {
+        verify() {
+            console.log('verified');
             // 手机号码登录
             if (!this.loginwithUserName) {
                 if (!this.userName) {
@@ -121,26 +132,25 @@
                     return
                 }
             }
-            type Data={
-                userName:string,
-                password?:string
-                code?:string
+            type Data = {
+                userName: string,
+                password?: string
+                code?: string
             }
 
-            let data:Data = {
+            let data: Data = {
                 userName: this.userName,
-                code:!this.loginwithUserName&&this.password||undefined,
-                password:this.loginwithUserName&&this.password||undefined
+                code: !this.loginwithUserName && this.password || undefined,
+                password: this.loginwithUserName && this.password || undefined
             }
             this.$fetch('login', data).then(res => {
                 let status = res.status
                 if (status === 200) {
                     console.log('成功登录')
-                    this.$fetch('userInfo',{userName:this.userName}).then(res => {
+                    this.$fetch('userInfo', {userName: this.userName}).then(res => {
                         this.$store.commit('setUserInfo', res.data.user)
                         // 登录完成后，我们希望是回到原来页。
-                        let path = this.$route.query.redirect || '/user'
-                        this.$router.push(path)
+                        this.$router.back()
                     })
                 } else {
                     this.errMsg = res.data.message
@@ -148,10 +158,13 @@
             }).catch(err => {
                 console.log(err)
             })
-
-            console.log('登录成功!');
         }
 
+        onSubmit() {
+            if(this.fn){
+                this.fn()
+            }
+        }
 
         clearError() {
             this.errMsg = ''
