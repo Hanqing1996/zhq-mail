@@ -8,9 +8,11 @@ import '@/assets/css/layout.css'
 import '@/assets/fonts/iconfont.css'
 import fetch from './api/fetch'
 import Icon from "@/components/Icon.vue";
+import Nav from "@/components/Nav.vue";
 Vue.config.productionTip = false
 
 Vue.component('Icon',Icon)
+Vue.component('Nav',Nav)
 
 Vue.prototype.$fetch = fetch
 

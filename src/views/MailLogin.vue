@@ -2,7 +2,7 @@
     <div class="layout">
         <div class="header_tit">
             <em class="milogo"></em>
-            <h4 class="header_tit_txt">小米帐号登录</h4>
+            <h4 class="header_tit_txt">帐号登录</h4>
         </div>
         <div>
             <LoginInputs :loginwithUserName="loginwithUserName"/>

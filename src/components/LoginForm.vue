@@ -62,7 +62,7 @@
         @Watch('loginwithUserName')
         onloginwithUserNameChanged(val: string, oldVal: string) {
             if(val){
-                this.usernamePlaceholder='邮箱/手机号码/小米ID'
+                this.usernamePlaceholder='邮箱/手机号码/商场ID'
                 this.passwordPlaceholder='密码'
             } else {
                 this.usernamePlaceholder='手机号码'
