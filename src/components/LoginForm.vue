@@ -26,9 +26,9 @@
         </div>
         <div class="btns_bg">
 
-            <button class="btnadpt submitButton" @click="onSubmit">
+            <button class="btnadpt submitButton" @click="submit">
                 <Icon v-if="loading" name="loading" class="loading"/>
-                  <div :class="{loadingClass:loading}">{{submitMessage}}</div>
+                <div :class="{loadingClass:loading}">{{submitMessage}}</div>
             </button>
         </div>
     </div>
@@ -50,7 +50,7 @@
          * loading 在（verify 的执行时间+防抖的时间间隔）内为 true。
          * 如果不包含防抖的时间间隔，用户点击登录后发现过一会才出现“登录中”字样，会很生气
          */
-        loading=false
+        loading = false
         fn: null | Function = null
         @Prop(Boolean) readonly loginwithUserName!: boolean
         @Prop({default: 60}) readonly maxCountdown!: number
@@ -64,10 +64,9 @@
         }
 
         get submitMessage() {
-            if(this.loading){
+            if (this.loading) {
                 return '登录中...'
-            }
-            else return this.loginwithUserName ? '登录' : '立即登录注册'
+            } else return this.loginwithUserName ? '登录' : '立即登录注册'
         }
 
         get codeMsg() {
@@ -76,7 +75,7 @@
 
         created() {
             this.countdown = this.maxCountdown
-            this.fn = debounce(this.verify, 3000)
+            this.fn = debounce(this.onSubmit, 3000)
         }
 
         getCode() {
@@ -108,67 +107,70 @@
             return reg.test(this.userName)
         }
 
-        verify() {
-            // 这里刻意让提交动作在5s后执行，以展示 loading 效果
-            setTimeout(()=>{
-                // 手机号码登录
-                if (!this.loginwithUserName) {
-                    if (!this.userName) {
-                        this.errMsg = '请输入手机号'
-                        return
-                    }
-                    if (!this.checkMobile()) {
-                        this.errMsg = '手机号码格式不正确'
-                        return
-                    }
-                    if (!this.password) {
-                        this.errMsg = '请输入短信验证码'
-                        return
-                    }
+
+        login() {
+            let data: Data = {
+                userName: this.userName,
+                code: !this.loginwithUserName && this.password || undefined,
+                password: this.loginwithUserName && this.password || undefined
+            }
+            this.$fetch('login', data).then(res => {
+                let status = res.status
+                if (status === 200) {
+                    console.log('成功登录')
+                    this.$fetch('userInfo', {userName: this.userName}).then(res => {
+                        this.$store.commit('setUserInfo', res.data.user)
+                        // 登录完成后，我们希望是回到原来页。
+                        this.$router.back()
+                    })
                 } else {
-                    if (!this.userName) {
-                        this.errMsg = '请输入账号'
-                        return
-                    }
-                    if (!this.password) {
-                        this.errMsg = '请输入密码'
-                        return
-                    }
+                    this.errMsg = res.data.message
                 }
-                type Data = {
-                    userName: string,
-                    password?: string
-                    code?: string
-                }
-
-                let data: Data = {
-                    userName: this.userName,
-                    code: !this.loginwithUserName && this.password || undefined,
-                    password: this.loginwithUserName && this.password || undefined
-                }
-                this.$fetch('login', data).then(res => {
-                    let status = res.status
-                    if (status === 200) {
-                        console.log('成功登录')
-                        this.$fetch('userInfo', {userName: this.userName}).then(res => {
-                            this.$store.commit('setUserInfo', res.data.user)
-                            // 登录完成后，我们希望是回到原来页。
-                            this.$router.back()
-                        })
-                    } else {
-                        this.errMsg = res.data.message
-                    }
-                }).catch(err => {
-                    console.log(err)
-                })
-                this.loading=false
+            }).catch(err => {
+                console.log(err)
+            })
+        }
 
 
-            },5000)
+        validate() {
+            // 手机号码登录
+            if (!this.loginwithUserName) {
+                if (!this.userName) {
+                    this.errMsg = '请输入手机号'
+                    return
+                }
+                if (!this.checkMobile()) {
+                    this.errMsg = '手机号码格式不正确'
+                    return
+                }
+                if (!this.password) {
+                    this.errMsg = '请输入短信验证码'
+                    return
+                }
+            } else {
+                if (!this.userName) {
+                    this.errMsg = '请输入账号'
+                    return
+                }
+                if (!this.password) {
+                    this.errMsg = '请输入密码'
+                    return
+                }
+            }
         }
 
         onSubmit() {
-            this.loading=true
+            // 这里刻意让提交动作在5s后执行，以展示 loading 效果
+            setTimeout(() => {
+                this.validate()
+                this.login()
+                this.loading = false
+
+            }, 5000)
+        }
+
+        submit() {
+            this.loading = true
             this.fn && this.fn()
         }
 
@@ -266,7 +268,7 @@
         border-radius: 6px;
         background-color: #ff6700;
     }
-    .submitButton{
+    .submitButton {
         display: flex;
         align-items: center;
         justify-content: space-around;
@@ -275,8 +277,7 @@
     .loading {
         @include spin;
     }
-
-    .loadingClass{
+    .loadingClass {
         margin-left: -150px;
     }
 
