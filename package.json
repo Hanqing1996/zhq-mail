@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build"
   },
   "dependencies": {
@@ -15,12 +15,14 @@
     "vuex": "^3.1.2"
   },
   "devDependencies": {
+    "@types/blueimp-md5": "^2.7.0",
     "@vue/cli-plugin-babel": "^4.2.0",
     "@vue/cli-plugin-router": "^4.2.0",
     "@vue/cli-plugin-typescript": "^4.2.0",
     "@vue/cli-plugin-vuex": "^4.2.0",
     "@vue/cli-service": "^4.2.0",
     "axios": "^0.19.2",
+    "blueimp-md5": "^2.13.0",
     "mockjs": "^1.1.0",
     "normalize.css": "^8.0.1",
     "sass": "^1.25.0",

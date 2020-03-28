@@ -35,8 +35,10 @@
 </template>
 
 <script lang="ts">
+    import md5 from 'blueimp-md5'
+
     import Vue from 'vue'
-    import {Component, Prop} from "vue-property-decorator";
+    import {Component, Prop, Watch} from "vue-property-decorator";
     import debounce from "@/helpers/debounce";
 
     @Component
@@ -52,15 +54,20 @@
          */
         loading = false
         fn: null | Function = null
+        usernamePlaceholder=''
+        passwordPlaceholder=''
         @Prop(Boolean) readonly loginwithUserName!: boolean
         @Prop({default: 60}) readonly maxCountdown!: number
 
-        get usernamePlaceholder() {
-            return this.loginwithUserName ? '邮箱/手机号码/小米ID' : '手机号码'
-        }
-
-        get passwordPlaceholder() {
-            return this.loginwithUserName ? '密码' : '短信验证码'
+        @Watch('loginwithUserName')
+        onloginwithUserNameChanged(val: string, oldVal: string) {
+            if(val){
+                this.usernamePlaceholder='邮箱/手机号码/小米ID'
+                this.passwordPlaceholder='密码'
+            } else {
+                this.usernamePlaceholder='手机号码'
+                this.passwordPlaceholder='短信验证码'
+            }
         }
 
         get submitMessage() {
@@ -112,7 +119,7 @@
             let data: Data = {
                 userName: this.userName,
                 code: !this.loginwithUserName && this.password || undefined,
-                password: this.loginwithUserName && this.password || undefined
+                password: this.loginwithUserName && md5(this.password) || undefined
             }
             this.$fetch('login', data).then(res => {
                 let status = res.status
