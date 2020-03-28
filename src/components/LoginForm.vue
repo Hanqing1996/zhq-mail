@@ -25,8 +25,10 @@
             <span class="error-con">{{errMsg}}</span>
         </div>
         <div class="btns_bg">
-            <button class="btnadpt" @click="onSubmit">
-                {{submitMessage}}
+
+            <button class="btnadpt submitButton" @click="onSubmit">
+                <Icon v-if="loading" name="loading" class="loading"/>
+                  <div :class="{loadingClass:loading}">{{submitMessage}}</div>
             </button>
         </div>
     </div>
@@ -44,7 +46,12 @@
         userName = ''
         password = ''
         timer = 0
-        fn:null|Function=null
+        /**
+         * loading 在（verify 的执行时间+防抖的时间间隔）内为 true。
+         * 如果不包含防抖的时间间隔，用户点击登录后发现过一会才出现“登录中”字样，会很生气
+         */
+        loading=false
+        fn: null | Function = null
         @Prop(Boolean) readonly loginwithUserName!: boolean
         @Prop({default: 60}) readonly maxCountdown!: number
 
@@ -57,7 +64,10 @@
         }
 
         get submitMessage() {
-            return this.loginwithUserName ? '登录' : '立即登录注册'
+            if(this.loading){
+                return '登录中...'
+            }
+            else return this.loginwithUserName ? '登录' : '立即登录注册'
         }
 
         get codeMsg() {
@@ -66,7 +76,7 @@
 
         created() {
             this.countdown = this.maxCountdown
-            this.fn=debounce(this.verify,5000)
+            this.fn = debounce(this.verify, 3000)
         }
 
         getCode() {
@@ -99,61 +109,67 @@
         }
 
         verify() {
-            console.log('verified');
-            // 手机号码登录
-            if (!this.loginwithUserName) {
-                if (!this.userName) {
-                    this.errMsg = '请输入手机号'
-                    return
-                }
-                if (!this.checkMobile()) {
-                    this.errMsg = '手机号码格式不正确'
-                    return
-                }
-                if (!this.password) {
-                    this.errMsg = '请输入短信验证码'
-                    return
-                }
-            } else {
-                if (!this.userName) {
-                    this.errMsg = '请输入账号'
-                    return
-                }
-                if (!this.password) {
-                    this.errMsg = '请输入密码'
-                    return
-                }
-            }
-            type Data = {
-                userName: string,
-                password?: string
-                code?: string
-            }
-
-            let data: Data = {
-                userName: this.userName,
-                code: !this.loginwithUserName && this.password || undefined,
-                password: this.loginwithUserName && this.password || undefined
-            }
-            this.$fetch('login', data).then(res => {
-                let status = res.status
-                if (status === 200) {
-                    console.log('成功登录')
-                    this.$fetch('userInfo', {userName: this.userName}).then(res => {
-                        this.$store.commit('setUserInfo', res.data.user)
-                        // 登录完成后，我们希望是回到原来页。
-                        this.$router.back()
-                    })
+            // 这里刻意让提交动作在5s后执行，以展示 loading 效果
+            setTimeout(()=>{
+                // 手机号码登录
+                if (!this.loginwithUserName) {
+                    if (!this.userName) {
+                        this.errMsg = '请输入手机号'
+                        return
+                    }
+                    if (!this.checkMobile()) {
+                        this.errMsg = '手机号码格式不正确'
+                        return
+                    }
+                    if (!this.password) {
+                        this.errMsg = '请输入短信验证码'
+                        return
+                    }
                 } else {
-                    this.errMsg = res.data.message
+                    if (!this.userName) {
+                        this.errMsg = '请输入账号'
+                        return
+                    }
+                    if (!this.password) {
+                        this.errMsg = '请输入密码'
+                        return
+                    }
                 }
-            }).catch(err => {
-                console.log(err)
-            })
+                type Data = {
+                    userName: string,
+                    password?: string
+                    code?: string
+                }
+
+                let data: Data = {
+                    userName: this.userName,
+                    code: !this.loginwithUserName && this.password || undefined,
+                    password: this.loginwithUserName && this.password || undefined
+                }
+                this.$fetch('login', data).then(res => {
+                    let status = res.status
+                    if (status === 200) {
+                        console.log('成功登录')
+                        this.$fetch('userInfo', {userName: this.userName}).then(res => {
+                            this.$store.commit('setUserInfo', res.data.user)
+                            // 登录完成后，我们希望是回到原来页。
+                            this.$router.back()
+                        })
+                    } else {
+                        this.errMsg = res.data.message
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+                this.loading=false
+
+
+            },5000)
         }
 
         onSubmit() {
-            this.fn&&this.fn()
+            this.loading=true
+            this.fn && this.fn()
         }
 
         clearError() {
@@ -163,6 +179,13 @@
 
 </script>
 <style scoped lang="scss">
+    @import "~@/assets/_helper.scss";
+    ::v-deep {
+        svg.icon {
+            width: 1.5em;height: 1.5em;
+            fill: white;
+        }
+    }
     .login_user, .pwd_panel {
         display: flex;
         align-items: center;
@@ -243,4 +266,18 @@
         border-radius: 6px;
         background-color: #ff6700;
     }
+    .submitButton{
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+    }
+    /*让loading旋转*/
+    .loading {
+        @include spin;
+    }
+
+    .loadingClass{
+        margin-left: -150px;
+    }
+
 </style>

@@ -7,7 +7,10 @@ import '@/assets/css/reset.css'
 import '@/assets/css/layout.css'
 import '@/assets/fonts/iconfont.css'
 import fetch from './api/fetch'
+import Icon from "@/components/Icon.vue";
 Vue.config.productionTip = false
+
+Vue.component('Icon',Icon)
 
 Vue.prototype.$fetch = fetch
 
