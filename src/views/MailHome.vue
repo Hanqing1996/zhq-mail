@@ -23,8 +23,6 @@
                     </div>
 
 
-
-
                     <div class="nav swiper-container">
                         <div v-if="navList&&navList.length" class="swiper-wrapper">
                             <div
@@ -39,16 +37,15 @@
                     </div>
 
 
-
-<!--                    <div class="nav">-->
-<!--                        <div class="nav-item" v-for="nav in navList" :key="nav.name">-->
-<!--                            <span style="color: rgb(237, 91, 0); border-color: rgb(242, 242, 242);">{{nav.name}}</span>-->
-<!--                        </div>-->
-<!--                    </div>-->
+                    <!--                    <div class="nav">-->
+                    <!--                        <div class="nav-item" v-for="nav in navList" :key="nav.name">-->
+                    <!--                            <span style="color: rgb(237, 91, 0); border-color: rgb(242, 242, 242);">{{nav.name}}</span>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
                 </header>
                 <div class="page-wrap">
                     <div class="bodys">
-                        bodys
+                        bodyssd
                     </div>
                 </div>
             </div>
@@ -66,27 +63,30 @@
     @Component({components: {LoginInputs}})
     export default class MailLogin extends Vue {
         navList = []
-        curIndex=0
-        homeSwiper?:Swiper=undefined
-        slidesPerView=6
-        transitionName=''
+        curIndex = 0
+        homeSwiper?: Swiper = undefined
+        slidesPerView = 10
+        transitionName = ''
+
         getNavList() {
             this.$fetch('navList', {}).then(res => {
                 this.setNavList(res)
             })
         }
+
         created() {
+            this.$NProgress.start()
             this.getNavList()
-            console.log(this.$NProgress);
+            this.$NProgress.configure({showSpinner: false})
+            this.$NProgress.done()
         }
 
-        setNavList (res:any) {
+        setNavList(res: any) {
             let list = res.data.list
-            list.forEach((item:any) => {
+            list.forEach((item: any) => {
                 item.hasData = false
             })
             this.navList = list
-            // this.getHomePage('init')
             this.$nextTick(() => {
                 this.homeSwiper = new Swiper('.swiper-container', {
                     // 一行展示个数
@@ -95,33 +95,32 @@
                 })
             })
         }
-        // getHomePage (flag:string) {
-        //     if (flag !== 'init') {
-        //         this.$NProgress.start()
-        //     }
-        //     this.$fetch('homePage', {
-        //         page_id: this.navList[this.curIndex].page_id
-        //     }).then(res => {
-        //         this.navList[this.curIndex].hasData = true
-        //         this.$NProgress.done()
-        //         this.$store.commit('setViewLoading', false)
-        //     })
-        // }
-        changeIndex (index:number) {
+
+        getHomePage() {
+            this.$NProgress.start()
+            this.$fetch('homePage', {
+                page_id: this.navList[this.curIndex].page_id
+            }).then(res => {
+                this.navList[this.curIndex].hasData = true
+                // 进度条消失
+                this.$NProgress.done()
+                // this.$store.commit('setViewLoading', false)
+            })
+        }
+
+        changeIndex(index: number) {
             document.querySelector('.page-wrap')!.scrollTo(0, 0)
             this.transitionName = index > this.curIndex ? 'page-left' : 'page-right'
             this.curIndex = index
-            let toIndex=0
-            if(index>this.slidesPerView / 2)
+            let toIndex = 0
+            if (index > this.slidesPerView / 2)
                 toIndex = index - this.slidesPerView / 2
             this.homeSwiper!.slideTo(toIndex, 1000, false)
-            // !this.navList[index].hasData && this.getHomePage()
+            // 未加载过数据的 nav 被选中，才加载对应数据并显示进度条
+            !this.navList[index].hasData && this.getHomePage()
         }
     }
-
 </script>
-
-
 <style scoped lang="scss">
     .header {
         position: fixed;
@@ -133,7 +132,7 @@
         background: #f2f2f2;
     }
     .app-header-item img {
-        width: 100%;
+        width: 80%;
     }
     .app-header-title {
         display: flex;
@@ -141,6 +140,7 @@
         align-items: center;
         border: 1px solid #e5e5e5;
         text-align: left;
+        width: 95%;
         color: rgba(0, 0, 0, .3);
         background-color: #fff;
         border-radius: 4px;
@@ -151,7 +151,7 @@
         font-size: 24px;
     }
     .nav {
-        overflow-x: auto;
+        /* overflow-x: auto; */
         background: #f2f2f2;
         font-size: 14px;
         white-space: nowrap;
@@ -161,22 +161,23 @@
         display: inline-block;
         padding: 0 14px;
         width: auto !important;
+        span {
+            display: inline-block;
+            line-height: 32px;
+            border-bottom: 2px solid rgba(237, 91, 0, 0);
+            color: rgb(116, 116, 116);
+            border-color: rgb(242, 242, 242);
+        }
+        &.nav_active span {
+            color: rgb(237, 91, 0);
+            border-color: rgb(237, 91, 0);
+        }
     }
-    .nav .nav-item span {
-        display: inline-block;
-        line-height: 32px;
-    }
-    .nav_active span{
-        color: rgb(237, 91, 0);
-        border-bottom: 2px solid #ed5b00;
-    }
-
     .page-wrap {
         position: relative;
         height: 100%;
         overflow-x: hidden;
         overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
     }
     .bodys {
         margin-top: -100px;
@@ -190,6 +191,7 @@
         font-size: 72px;
     }
     .app-header-wrapper {
+        margin-top: 10px;
         display: flex;
         align-items: center;
         justify-content: space-around;
@@ -201,6 +203,7 @@
         margin: 0 10px;
     }
     .logo {
+        padding-left: 5px;
         img {
             width: 1.5em;
             height: 1em;

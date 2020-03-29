@@ -4,6 +4,7 @@ import url from './index'
 function fetch (api:string, data:object) {
   return new Promise((resolve, reject) => {
     axios.post(url[api], data).then(res => {
+
       // 各种业务处理
       resolve(res.data)
     }).catch(err => {

@@ -48,8 +48,8 @@
         // 默认手机号码登录
         loginwithUserName = false
 
-        get triggerMessage(){
-            return this.loginwithUserName ? '手机短信登录/注册' :'用户名密码登录'
+        get triggerMessage() {
+            return this.loginwithUserName ? '手机短信登录/注册' : '用户名密码登录'
         }
 
         triggerLoginMethod() {

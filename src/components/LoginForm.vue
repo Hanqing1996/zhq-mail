@@ -40,6 +40,8 @@
     import Vue from 'vue'
     import {Component, Prop, Watch} from "vue-property-decorator";
     import debounce from "@/helpers/debounce";
+    import axios from "axios";
+    import url from "@/api";
 
     @Component
     export default class LoginForm extends Vue {
@@ -97,7 +99,8 @@
                 return
             }
 
-            this.$fetch('getCode', {username: this.userName}).then((res: any) => {
+            this.$fetch('getCode', {userName: this.userName}).then((res: any) => {
+                console.log(res);
                 this.timer = setInterval(() => {
                     this.countdown--
                     if (this.countdown === 0) {

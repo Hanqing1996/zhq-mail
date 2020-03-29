@@ -12,6 +12,7 @@ import NProgress from 'nprogress'
 import Icon from "@/components/Icon.vue";
 import Nav from "@/components/Nav.vue";
 Vue.config.productionTip = false
+NProgress.configure({ showSpinner: false })
 
 Vue.component('Icon',Icon)
 Vue.component('Nav',Nav)
