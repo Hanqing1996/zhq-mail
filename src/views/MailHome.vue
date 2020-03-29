@@ -77,6 +77,7 @@
         }
         created() {
             this.getNavList()
+            console.log(this.$NProgress);
         }
 
         setNavList (res:any) {
