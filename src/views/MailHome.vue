@@ -110,12 +110,9 @@
             document.querySelector('.page-wrap')!.scrollTo(0, 0)
             this.transitionName = index > this.curIndex ? 'page-left' : 'page-right'
             this.curIndex = index
-
-            // 选中前（this.slidesPerView / 2+1）个，不滑动
-            if(index<this.slidesPerView / 2)
-                return
-            // toIndex 为 homeSwiper 起始位置
-            let toIndex = index - this.slidesPerView / 2
+            let toIndex=0
+            if(index>this.slidesPerView / 2)
+                toIndex = index - this.slidesPerView / 2
             this.homeSwiper!.slideTo(toIndex, 1000, false)
             // !this.navList[index].hasData && this.getHomePage()
         }
