@@ -21,22 +21,30 @@
                             </div>
                         </div>
                     </div>
-                    <div class="nav">
-                        <div class="nav-item" v-for="nav in navList" :key="nav.name">
-                            <span style="color: rgb(237, 91, 0); border-color: rgb(242, 242, 242);">{{nav.name}}</span>
+
+
+
+
+                    <div class="nav swiper-container">
+                        <div v-if="navList&&navList.length" class="swiper-wrapper">
+                            <div
+                                    v-for="(nav,index) in navList"
+                                    :key="nav.page_id"
+                                    class="nav-item swiper-slide"
+                                    :class="{'nav_active':curIndex == index}"
+                                    @click="changeIndex(index)">
+                                <span>{{nav.name}}</span>
+                            </div>
                         </div>
                     </div>
 
 
 
-
-
-
-
-
-
-
-
+<!--                    <div class="nav">-->
+<!--                        <div class="nav-item" v-for="nav in navList" :key="nav.name">-->
+<!--                            <span style="color: rgb(237, 91, 0); border-color: rgb(242, 242, 242);">{{nav.name}}</span>-->
+<!--                        </div>-->
+<!--                    </div>-->
                 </header>
                 <div class="page-wrap">
                     <div class="bodys">
@@ -53,22 +61,63 @@
     import {Component, Prop} from "vue-property-decorator";
     import LoginInputs from "@/components/LoginForm.vue";
 
+    import Swiper from 'swiper'
+
     @Component({components: {LoginInputs}})
     export default class MailLogin extends Vue {
         navList = []
-
+        curIndex=0
+        homeSwiper?:Swiper=undefined
+        slidesPerView=6
+        transitionName=''
         getNavList() {
             this.$fetch('navList', {}).then(res => {
                 this.setNavList(res)
             })
         }
-
         created() {
             this.getNavList()
         }
 
-        setNavList(res: any) {
-            this.navList=res.data.list
+        setNavList (res:any) {
+            let list = res.data.list
+            list.forEach((item:any) => {
+                item.hasData = false
+            })
+            this.navList = list
+            // this.getHomePage('init')
+            this.$nextTick(() => {
+                this.homeSwiper = new Swiper('.swiper-container', {
+                    // 一行展示个数
+                    slidesPerView: this.slidesPerView,
+                    freeMode: true
+                })
+            })
+        }
+        // getHomePage (flag:string) {
+        //     if (flag !== 'init') {
+        //         this.$NProgress.start()
+        //     }
+        //     this.$fetch('homePage', {
+        //         page_id: this.navList[this.curIndex].page_id
+        //     }).then(res => {
+        //         this.navList[this.curIndex].hasData = true
+        //         this.$NProgress.done()
+        //         this.$store.commit('setViewLoading', false)
+        //     })
+        // }
+        changeIndex (index:number) {
+            document.querySelector('.page-wrap')!.scrollTo(0, 0)
+            this.transitionName = index > this.curIndex ? 'page-left' : 'page-right'
+            this.curIndex = index
+
+            // 选中前（this.slidesPerView / 2+1）个，不滑动
+            if(index<this.slidesPerView / 2)
+                return
+            // toIndex 为 homeSwiper 起始位置
+            let toIndex = index - this.slidesPerView / 2
+            this.homeSwiper!.slideTo(toIndex, 1000, false)
+            // !this.navList[index].hasData && this.getHomePage()
         }
     }
 
@@ -113,12 +162,17 @@
     .nav .nav-item {
         display: inline-block;
         padding: 0 14px;
+        width: auto !important;
     }
     .nav .nav-item span {
         display: inline-block;
         line-height: 32px;
-        border-bottom: 2px solid rgba(237, 91, 0, 0);
     }
+    .nav_active span{
+        color: rgb(237, 91, 0);
+        border-bottom: 2px solid #ed5b00;
+    }
+
     .page-wrap {
         position: relative;
         height: 100%;
