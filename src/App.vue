@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <transition class="page-wrap" tag="div" :name="transitionName">
+        <transition class="page-wrap" tag="div" :name="transitionName" v-show="!viewLoading">
             <router-view/>
         </transition>
     </div>
@@ -8,13 +8,21 @@
 <script lang="ts">
     import Vue from 'vue'
     import {Component, Watch} from "vue-property-decorator";
+    import {mapGetters, mapState} from "vuex";
 
-    @Component
+    @Component({
+        computed: {...mapState(['viewLoading'])},
+    })
     export default class App extends Vue {
         transitionName = 'page-left'
 
         @Watch('$route')
         onRouteChanged(to: any, from: any) {
+            // 刷新时不需要过渡
+            if(!from.name){
+                this.transitionName=''
+                return
+            }
             if (to.meta.index && from.meta.index) {
                 this.transitionName = to.meta.index < from.meta.index ? 'page-right' : 'page-left'
             }
