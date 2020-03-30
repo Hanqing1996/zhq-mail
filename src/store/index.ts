@@ -6,6 +6,10 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    // UI数据
+    viewLoading: false,//
+    // ViewLoading 为复用数据，每次跳转到新路由前都会被置为 true
+    // 用户数据
     userInfo:null
   },
   getters: {
@@ -14,6 +18,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    setViewLoading (state, isLoading) {
+      state.viewLoading = isLoading
+    },
     setUserInfo (state, info) {
       state.userInfo = info
     }

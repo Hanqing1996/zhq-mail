@@ -52,6 +52,11 @@
             return this.loginwithUserName ? '手机短信登录/注册' : '用户名密码登录'
         }
 
+        created(){
+            this.$store.commit('setViewLoading', false)
+            this.$NProgress.done()
+        }
+
         triggerLoginMethod() {
             this.loginwithUserName = !this.loginwithUserName
         }

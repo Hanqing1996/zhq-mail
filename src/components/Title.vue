@@ -1,9 +1,9 @@
 <template>
     <header class="app-header-wrapper app-shell-header">
-        <template>
+        <template v-if="!loading">
             <div class="app-header-left">
                 <a class="app-header-item">
-                    <i class="iconfont icon-back"></i>
+                    <i class="iconfont icon-back" @click="back"></i>
                 </a>
             </div>
             <div class="app-header-middle">
@@ -26,6 +26,14 @@
     export default class CategoryGroup extends Vue {
         @Prop({default:''}) readonly title!: string
         @Prop({default:true}) readonly showSearchIcon?: boolean
+        @Prop({default:false}) readonly loading?: boolean
+
+        created(){
+        }
+
+        back(){
+            this.$router.back()
+        }
     }
 </script>
 

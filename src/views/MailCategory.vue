@@ -1,6 +1,7 @@
 <template>
     <div class="app-shell">
-        <Title title="分类"/>
+        <Title title="分类" />
+<!--        <img v-if="loading" src="../assets/images/loading.png" alt="" class="loading_img">-->
         <div class="app-view-wrapper">
             <div class="container app-view app-view-with-header app-view-with-footer">
                 <div class="list-navbar">
@@ -59,13 +60,15 @@
     export default class MailCategory extends Vue {
         categoryList=[]
         curIndex=0
+        loading=true
         created(){
             this.getList()
         }
         getList() {
             this.$fetch('category', {}).then(res => {
-                console.log(res.data.lists);
                 this.categoryList=res.data.lists
+                this.$store.commit('setViewLoading', false)
+                this.$NProgress.done()
             })
         }
         changeIndex (index:number) {
@@ -208,5 +211,8 @@
         white-space: nowrap;
         font-size: 12px;
         color: rgba(0,0,0,.54);
+    }
+    .loading_img{
+        width: 100%;
     }
 </style>

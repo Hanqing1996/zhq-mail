@@ -1,5 +1,6 @@
 <template>
     <div id="app">
+        <Skeleton v-if="viewLoading"/>
         <transition class="page-wrap" tag="div" :name="transitionName" v-show="!viewLoading">
             <router-view/>
         </transition>
@@ -9,18 +10,23 @@
     import Vue from 'vue'
     import {Component, Watch} from "vue-property-decorator";
     import {mapGetters, mapState} from "vuex";
+    import Skeleton from '@/components/Skeleton.vue'
 
     @Component({
+        components: {Skeleton},
         computed: {...mapState(['viewLoading'])},
     })
     export default class App extends Vue {
         transitionName = 'page-left'
 
+        created() {
+        }
+
         @Watch('$route')
         onRouteChanged(to: any, from: any) {
             // 刷新时不需要过渡
-            if(!from.name){
-                this.transitionName=''
+            if (!from.name) {
+                this.transitionName = ''
                 return
             }
             if (to.meta.index && from.meta.index) {

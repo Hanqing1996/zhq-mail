@@ -64,7 +64,7 @@
     }
 
     @Component
-    export default class MailLogin extends Vue {
+    export default class MailHome extends Vue {
         navList: Array<navItem> = []
         curIndex = 0
         homeSwiper?: Swiper = undefined
@@ -74,14 +74,13 @@
         getNavList() {
             this.$fetch('navList', {}).then(res => {
                 this.setNavList(res)
+                this.$store.commit('setViewLoading', false)
+                this.$NProgress.done()
             })
         }
 
         created() {
-            this.$NProgress.start()
             this.getNavList()
-            this.$NProgress.configure({showSpinner: false})
-            this.$NProgress.done()
         }
 
         setNavList(res: any) {

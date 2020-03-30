@@ -20,6 +20,21 @@ Vue.component('Nav',Nav)
 Vue.prototype.$fetch = fetch
 Vue.prototype.$NProgress = NProgress
 
+// 在每次跳转到路由之前，将 ViewLoading 重置为 true
+// router.beforeEach((to, from, next) => {
+//   console.log('beforeEach');
+//   store.commit('setViewLoading', true)
+//   NProgress.start()
+//   if (to.meta.requiresAuth && !store.getters.isLogin) {
+//     next({
+//       name: 'login',
+//       query: { redirect: to.fullPath }
+//     })
+//   } else {
+//     next()
+//   }
+// })
+
 new Vue({
   router,
   store,
