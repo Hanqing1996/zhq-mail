@@ -35,20 +35,18 @@
                             </div>
                         </div>
                     </div>
-
-
-                    <!--                    <div class="nav">-->
-                    <!--                        <div class="nav-item" v-for="nav in navList" :key="nav.name">-->
-                    <!--                            <span style="color: rgb(237, 91, 0); border-color: rgb(242, 242, 242);">{{nav.name}}</span>-->
-                    <!--                        </div>-->
-                    <!--                    </div>-->
                 </header>
-                <div class="page-wrap">
-                    <div class="bodys">
-                        bodyssd
+                <transition-group class="page-wrap" tag="div" :name="transitionName" >
+                    <div
+                            v-for="(nav,index) in navList"
+                            :key="nav.page_id"
+                            v-show="index==curIndex"
+                            class="bodys" >
+                        {{nav.name}}
                     </div>
-                </div>
+                </transition-group>
             </div>
+            <Nav/>
         </div>
     </div>
 </template>
@@ -208,5 +206,33 @@
             width: 1.5em;
             height: 1em;
         }
+    }
+    .bodys{
+        text-align: center;
+    }
+    /* 首页内容切换过渡、底部路由导航切换过渡 */
+    .page-left-enter-active, .page-left-leave-active {
+        transition: all .5s;
+    }
+    .page-left-enter {
+        transform: translateX(100%);
+    }
+    .page-left-enter-to, .page-left-leave {
+        transform: translateX(0);
+    }
+    .page-left-leave-to {
+        transform: translateX(-100%);
+    }
+    .page-right-enter-active, .page-right-leave-active {
+        transition: all .5s;
+    }
+    .page-right-enter {
+        transform: translateX(-100%);
+    }
+    .page-right-enter-to, .page-right-leave {
+        transform: translateX(0);
+    }
+    .page-right-leave-to {
+        transform: translateX(100%);
     }
 </style>

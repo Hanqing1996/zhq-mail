@@ -1,18 +1,24 @@
 <template>
-    <nav class="nav">
-        <router-link to="/money" class="nav-item" active-class="selected">
-            <Icon name="money"/>
-            记账
-        </router-link>
-        <router-link to="/labels" class="nav-item" active-class="selected">
-            <Icon name="labels"/>
-            标签
-        </router-link>
-        <router-link to="/statistics" class="nav-item" active-class="selected">
-            <Icon name="statistics"/>
-            统计
-        </router-link>
-    </nav>
+    <footer class="app-bottom-navigator-wrapper app-shell-footer">
+        <div class="fill-height box-flex align-center">
+            <a class="flex on">
+                <i class="iconfont icon-homefill"></i>
+                <span>首页</span>
+            </a>
+            <a class="flex">
+                <i class="iconfont icon-goods"></i>
+                <span>分类</span>
+            </a>
+            <a class="flex">
+                <i class="iconfont icon-cart"></i>
+                <span>购物车</span>
+            </a>
+            <a class="flex">
+                <i class="iconfont icon-people"></i>
+                <span>我的</span>
+            </a>
+        </div>
+    </footer>
 </template>
 
 <script lang="ts">
@@ -20,29 +26,43 @@
         name: "Nav"
     }
 </script>
-
 <style scoped lang="scss">
-    a{
-        text-decoration: none;
+    .app-shell-footer {
+        position: fixed;
+        z-index: 9999;
+        bottom: 0;
+        left: 0;
+        right: 0;
     }
-    .nav {
+    .app-bottom-navigator-wrapper {
+        height: 52px;
+        background: #fff;
+        box-shadow: 0 3px 14px 2px rgba(0, 0, 0, .12);
+    }
+    .fill-height {
+        height: 100%;
+    }
+    .align-center {
+        align-items: center;
+    }
+    .box-flex {
         display: flex;
-        box-shadow: 0 0 3px rgba(0, 0, 0, 0.25);
-        flex-direction: row;
+    }
+    .flex {
+        text-align: center;
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        color: #999;
+    }
+    .iconfont {
+        font-size: 24px;
+    }
+    .flex span {
         font-size: 12px;
-        > .nav-item {
-            padding: 4px 0;
-            width: 33.33333%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-        > .nav-item.selected {
-            color: red;
-            > svg{
-                fill: red;
-            }
-        }
+    }
+    .on {
+        color: #ff6700;
     }
 </style>
