@@ -1,5 +1,5 @@
 <template>
-    
+    <div>cart<Nav/></div>
 </template>
 
 <script lang="ts">

@@ -53,3 +53,15 @@ declare module 'vue/types/vue' {
 }
 ```
 其它同上
+
+#### 异步组件
+* 配合 webpack 的 code splitting 使用，实现按需从服务器加载模块
+* yarn build 后 app.js 的体积会减小
+* [文档] 
+```
+// router/index.ts
+const MailHome =()=>import("@/views/MailHome.vue")
+const MailLogin =()=>import("@/views/MailLogin.vue")
+const MailCart =()=>import("@/views/MailCart.vue")
+const MailUser =()=>import("@/views/MailUser.vue")
+```

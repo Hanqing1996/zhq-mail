@@ -1,18 +1,18 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import MailHome from "@/views/MailHome.vue";
-import MailLogin from "@/views/MailLogin.vue";
-import MailCart from "@/views/MailCart.vue";
-import MailUser from "@/views/MailUser.vue";
-import MailCategory from "@/views/MailCategory.vue";
-import MailAddressList from "@/views/address/MailAddressList.vue";
-import MailDetail from "@/views/commodity/MailDetail.vue";
-import MailList from "@/views/commodity/MailList.vue";
-import MailSetting from "@/views/MailSetting.vue";
-import MailAddressEdit from "@/views/address/MailAddressEdit.vue";
-import OrderCheckout from "@/views/order/OrderCheckout.vue";
-import OrderList from "@/views/order/OrderList.vue";
-import OrderView from "@/views/order/OrderView.vue";
+const MailHome =()=>import("@/views/MailHome.vue")
+const MailLogin =()=>import("@/views/MailLogin.vue")
+const MailCart =()=>import("@/views/MailCart.vue")
+const MailUser =()=>import("@/views/MailUser.vue")
+const MailCategory =()=>import("@/views/MailCategory.vue")
+const MailAddressList =()=>import("@/views/address/MailAddressList.vue")
+const MailDetail =()=>import("@/views/commodity/MailDetail.vue")
+const MailList =()=>import("@/views/commodity/MailList.vue")
+const MailSetting =()=>import("@/views/MailSetting.vue")
+const MailAddressEdit =()=>import("@/views/address/MailAddressEdit.vue")
+const OrderCheckout =()=>import("@/views/order/OrderCheckout.vue")
+const OrderList =()=>import("@/views/order/OrderList.vue")
+const OrderView =()=>import("@/views/order/OrderView.vue")
 
 
 Vue.use(VueRouter)
@@ -26,6 +26,7 @@ const routes =[
     path: '/home',
     name: 'home',
     component: MailHome,
+    // meta 是额外添加的属性,用于在切换路由时判断 transitionName 的值是 'page-right' 还是 'page-left'
     meta: {
       index: 1
     }
@@ -105,9 +106,6 @@ const routes =[
     path: '/order/list',
     name: 'orderList',
     component: OrderList,
-    meta: {
-      // requiresAuth: true
-    }
   },
   {
     path: '/order/view/:id',

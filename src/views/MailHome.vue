@@ -3,6 +3,7 @@
         <div class="app-view-wrapper">
             <div class="app-view app-view-with-footer">
                 <header class="header">
+
                     <div class="app-header-wrapper">
                         <div class="app-header-left">
                             <div class="app-header-item logo">
@@ -36,31 +37,35 @@
                         </div>
                     </div>
                 </header>
-                <transition-group class="page-wrap" tag="div" :name="transitionName" >
+                <transition-group class="page-wrap" tag="div" :name="transitionName">
                     <div
                             v-for="(nav,index) in navList"
                             :key="nav.page_id"
                             v-show="index==curIndex"
-                            class="bodys" >
+                            class="bodys">
                         {{nav.name}}
                     </div>
                 </transition-group>
             </div>
-            <Nav/>
         </div>
+        <Nav/>
     </div>
 </template>
 
 <script lang="ts">
     import Vue from 'vue'
     import {Component, Prop} from "vue-property-decorator";
-    import LoginInputs from "@/components/LoginForm.vue";
 
     import Swiper from 'swiper'
 
-    @Component({components: {LoginInputs}})
+    type navItem = {
+        hasData: boolean,
+        page_id: string
+    }
+
+    @Component
     export default class MailLogin extends Vue {
-        navList = []
+        navList: Array<navItem> = []
         curIndex = 0
         homeSwiper?: Swiper = undefined
         slidesPerView = 10
@@ -207,32 +212,7 @@
             height: 1em;
         }
     }
-    .bodys{
+    .bodys {
         text-align: center;
-    }
-    /* 首页内容切换过渡、底部路由导航切换过渡 */
-    .page-left-enter-active, .page-left-leave-active {
-        transition: all .5s;
-    }
-    .page-left-enter {
-        transform: translateX(100%);
-    }
-    .page-left-enter-to, .page-left-leave {
-        transform: translateX(0);
-    }
-    .page-left-leave-to {
-        transform: translateX(-100%);
-    }
-    .page-right-enter-active, .page-right-leave-active {
-        transition: all .5s;
-    }
-    .page-right-enter {
-        transform: translateX(-100%);
-    }
-    .page-right-enter-to, .page-right-leave {
-        transform: translateX(0);
-    }
-    .page-right-leave-to {
-        transform: translateX(100%);
     }
 </style>

@@ -1,7 +1,7 @@
 <template>
     <div>
-        <div>{{userInfo}}</div>
-        <div>{{isLogin}}</div>
+        <span>user</span>
+        <Nav/>
     </div>
 </template>
 
