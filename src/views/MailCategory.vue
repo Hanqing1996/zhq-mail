@@ -49,7 +49,7 @@
 
 <script lang="ts">
     import Vue from 'vue'
-    import {Component, Prop} from "vue-property-decorator";
+    import {Component, Prop, Watch} from "vue-property-decorator";
     import CategoryGroup from "@/components/CategoryGroup.vue";
     import Title from "@/components/Title.vue"
 
@@ -62,6 +62,13 @@
         scrollTimer=0
         created(){
             this.getList()
+        }
+        @Watch('curIndex')
+        oncurIndexChanged(val:number,oldVal:number){
+            let listWrap = document.querySelector('.list-wrap')
+            let top = this.offsetTop[val]
+            listWrap!.removeEventListener('scroll', this.scrollHandler)
+            listWrap!.scrollTo(0, top)
         }
 
         wrapScroll(){
@@ -105,10 +112,6 @@
         // navbar->list-wrap
         changeIndex (index:number) {
             this.curIndex = index
-            let listWrap = document.querySelector('.list-wrap')
-            let top = this.offsetTop[index]
-            listWrap!.removeEventListener('scroll', this.scrollHandler)
-            listWrap!.scrollTo(0, top)
         }
     }
 
