@@ -19,7 +19,7 @@
                 </div>
 
 
-                <div class="list-wrap">
+                <div class="list-wrap" @touchstart="wrapScroll">
                     <div
                             v-for="(list,index) in categoryList"
                             :key="list.category_id"
@@ -40,9 +40,6 @@
                         </div>
                     </div>
                 </div>
-
-
-
             </div>
         </div>
         <Nav/>
@@ -61,22 +58,57 @@
         categoryList=[]
         curIndex=0
         loading=true
+        offsetTop:any[]=[]
+        scrollTimer=0
         created(){
             this.getList()
+        }
+
+        wrapScroll(){
+            let listWrap = document.querySelector('.list-wrap')
+            listWrap&&listWrap.addEventListener('scroll',this.scrollHandler)
+        }
+        scrollHandler(){
+            // 这里做了一个防抖
+            if(this.scrollTimer!=0){
+                clearTimeout(this.scrollTimer)
+            }
+            this.scrollTimer=setTimeout(()=>{
+                // list-wrap->navbar
+                let listWrap = document.querySelector('.list-wrap')
+                let currentTop=(listWrap as HTMLDivElement)!.scrollTop
+                this.curIndex=this.getListIndex(currentTop)
+            },100)
+        }
+
+        // 返回 currentTop 对应索引
+        getListIndex(currentTop:number){
+            let result=0
+            for(let i=0;i<this.offsetTop.length;i++){
+                if(currentTop<this.offsetTop[i]){
+                    result=i
+                    break
+                }
+            }
+            return result
         }
         getList() {
             this.$fetch('category', {}).then(res => {
                 this.categoryList=res.data.lists
                 this.$store.commit('setViewLoading', false)
                 this.$NProgress.done()
+                this.$nextTick(()=>{
+                    this.offsetTop=this.categoryList.map((category,index)=>(this.$refs[`category${index}`] as Array<any>)[0].offsetTop)
+                })
             })
         }
+        // navbar->list-wrap
         changeIndex (index:number) {
             this.curIndex = index
-            // let listWrap = document.querySelector('.list-wrap')
-            // let top = this.offsetTop[index]
-            // listWrap.removeEventListener('scroll', this.scrollHandler)
-            // listWrap.scrollTo(0, top)
+            let listWrap = document.querySelector('.list-wrap')
+            let top = this.offsetTop[index]
+            listWrap!.removeEventListener('scroll', this.scrollHandler)
+            listWrap!.scrollTo(0, top)
         }
     }
 
