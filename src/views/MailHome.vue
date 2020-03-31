@@ -57,6 +57,7 @@
     import {Component, Prop} from "vue-property-decorator";
 
     import Swiper from 'swiper'
+    import fetch from "@/api/fetch";
 
     type navItem = {
         hasData: boolean,
@@ -71,17 +72,30 @@
         slidesPerView = 10
         transitionName = ''
 
+        destroyed(){
+            this.homeSwiper&&this.homeSwiper.removeAllSlides()
+            this.$NProgress.remove()
+        }
+
+
+        beforeRouteEnter(to: any, from: any, next: any) {
+            if (!from.name) {
+                // 刷新
+                next((vm: any) => vm.getNavList())
+            } else {
+                // 路由切换
+                fetch('navList', {}).then(res => {
+                    next((vm: any) => vm.setNavList(res))
+                })
+            }
+        }
+
         getNavList() {
             this.$fetch('navList', {}).then(res => {
                 this.setNavList(res)
-                this.$store.commit('setViewLoading', false)
-                this.$NProgress.done()
             })
         }
 
-        created() {
-            this.getNavList()
-        }
 
         setNavList(res: any) {
             let list = res.data.list
@@ -89,6 +103,8 @@
                 item.hasData = false
             })
             this.navList = list
+            this.$store.commit('setViewLoading', false)
+            this.$NProgress.done()
             this.$nextTick(() => {
                 this.homeSwiper = new Swiper('.swiper-container', {
                     // 一行展示个数
@@ -103,11 +119,14 @@
             this.$fetch('homePage', {
                 page_id: this.navList[this.curIndex].page_id
             }).then(res => {
-                this.navList[this.curIndex].hasData = true
-                // 进度条消失
-                this.$NProgress.done()
-                // this.$store.commit('setViewLoading', false)
+                this.setHomePage()
             })
+        }
+
+        setHomePage() {
+            this.navList[this.curIndex].hasData = true
+            // 进度条消失
+            this.$NProgress.done()
         }
 
         changeIndex(index: number) {

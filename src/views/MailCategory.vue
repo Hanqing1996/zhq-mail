@@ -1,7 +1,7 @@
 <template>
     <div class="app-shell">
-        <Title title="分类" />
-<!--        <img v-if="loading" src="../assets/images/loading.png" alt="" class="loading_img">-->
+        <Title title="分类"/>
+        <!--        <img v-if="loading" src="../assets/images/loading.png" alt="" class="loading_img">-->
         <div class="app-view-wrapper">
             <div class="container app-view app-view-with-header app-view-with-footer">
                 <div class="list-navbar">
@@ -28,7 +28,7 @@
                         <div class="component-list-main">
                             <div class="cells_auto_fill">
                                 <a class="exposure items">
-                                    <img :scr="list.category_img">
+                                    <img v-lazy="list.category_img">
                                 </a>
                             </div>
                             <template v-for="(item,index) in list.category_list">
@@ -49,68 +49,98 @@
 
 <script lang="ts">
     import Vue from 'vue'
-    import {Component, Prop, Watch} from "vue-property-decorator";
+    import {Prop, Watch} from "vue-property-decorator";
+    import fetch from '@/api/fetch'
     import CategoryGroup from "@/components/CategoryGroup.vue";
     import Title from "@/components/Title.vue"
 
-    @Component({components:{CategoryGroup,Title}})
+    import Component from 'vue-class-component'
+
+    Component.registerHooks([
+        'beforeRouteEnter',
+        'beforeRouteUpdate',
+        'beforeRouteLeave'
+    ])
+
+    @Component({components: {CategoryGroup, Title}})
     export default class MailCategory extends Vue {
-        categoryList=[]
-        curIndex=0
-        loading=true
-        offsetTop:any[]=[]
-        scrollTimer=0
-        created(){
+        categoryList = []
+        curIndex = 0
+        loading = true
+        offsetTop: any[] = []
+        scrollTimer = 0
+
+        created() {
             this.getList()
         }
+
+        beforeRouteEnter(to: any, from: any, next: any) {
+            if (!from.name) {
+                // 刷新
+                next((vm: any) => vm.getList())
+            } else {
+                // 路由切换
+                fetch('category', {}).then(res => {
+                    next((vm: any) => vm.setList(res))
+                })
+            }
+        }
+
         @Watch('curIndex')
-        oncurIndexChanged(val:number,oldVal:number){
+        oncurIndexChanged(val: number, oldVal: number) {
             let listWrap = document.querySelector('.list-wrap')
             let top = this.offsetTop[val]
             listWrap!.removeEventListener('scroll', this.scrollHandler)
             listWrap!.scrollTo(0, top)
         }
 
-        wrapScroll(){
+        wrapScroll() {
             let listWrap = document.querySelector('.list-wrap')
-            listWrap&&listWrap.addEventListener('scroll',this.scrollHandler)
+            listWrap && listWrap.addEventListener('scroll', this.scrollHandler)
         }
-        scrollHandler(){
+
+        scrollHandler() {
             // 这里做了一个防抖
-            if(this.scrollTimer!=0){
+            if (this.scrollTimer != 0) {
                 clearTimeout(this.scrollTimer)
             }
-            this.scrollTimer=setTimeout(()=>{
+            this.scrollTimer = setTimeout(() => {
                 // list-wrap->navbar
                 let listWrap = document.querySelector('.list-wrap')
-                let currentTop=(listWrap as HTMLDivElement)!.scrollTop
-                this.curIndex=this.getListIndex(currentTop)
-            },100)
+                let currentTop = (listWrap as HTMLDivElement)!.scrollTop
+                this.curIndex = this.getListIndex(currentTop)
+            }, 100)
         }
 
         // 返回 currentTop 对应索引
-        getListIndex(currentTop:number){
-            let result=0
-            for(let i=0;i<this.offsetTop.length;i++){
-                if(currentTop<this.offsetTop[i]){
-                    result=i
+        getListIndex(currentTop: number) {
+            let result = 0
+            for (let i = 0; i < this.offsetTop.length; i++) {
+                if (currentTop < this.offsetTop[i]) {
+                    result = i
                     break
                 }
             }
             return result
         }
+
         getList() {
             this.$fetch('category', {}).then(res => {
-                this.categoryList=res.data.lists
-                this.$store.commit('setViewLoading', false)
-                this.$NProgress.done()
-                this.$nextTick(()=>{
-                    this.offsetTop=this.categoryList.map((category,index)=>(this.$refs[`category${index}`] as Array<any>)[0].offsetTop)
-                })
+                this.setList(res)
             })
         }
+
+        setList(res: any) {
+            this.categoryList = res.data.lists
+            this.$store.commit('setViewLoading', false)
+            this.$NProgress.done()
+            this.$nextTick(() => {
+                this.offsetTop = this.categoryList.map((category, index) => (this.$refs[`category${index}`] as Array<any>)[0].offsetTop)
+            })
+        }
+
         // navbar->list-wrap
-        changeIndex (index:number) {
+        changeIndex(index: number) {
             this.curIndex = index
         }
     }
@@ -168,15 +198,15 @@
         left: 80px;
         right: 0;
         top: 49px;
-        bottom:  40px;
+        bottom: 40px;
         padding: 2px 16px;
         overflow: auto;
     }
     .component-list-main .cells_auto_fill .items {
-        height: auto!important;
+        height: auto !important;
         display: block;
     }
-    .cells_auto_fill .items img{
+    .cells_auto_fill .items img {
         width: 260px;
         height: 104px;
     }
@@ -200,18 +230,18 @@
         left: 0;
         width: 30px;
         border-top: 1px solid #e0e0e0;
-        transform: translate3d(-150%,-50%,0);
+        transform: translate3d(-150%, -50%, 0);
     }
     .component-list-main .category_title span:after {
         left: auto;
         right: 0;
-        transform: translate3d(150%,-50%,0);
+        transform: translate3d(150%, -50%, 0);
     }
     .component-list-main .category_group .box {
         width: 100%;
         overflow: hidden;
     }
-    .box-flex>*, .box-inline-flex>* {
+    .box-flex > *, .box-inline-flex > * {
         flex: 1 1 auto;
     }
     .component-list-main .category_group .product {
@@ -238,16 +268,16 @@
         width: 100%;
     }
     .category_group .big {
-        height: 100%!important;
-        width: auto!important;
+        height: 100% !important;
+        width: auto !important;
     }
     .component-list-main .category_group .name {
         margin-top: 14px;
         white-space: nowrap;
         font-size: 12px;
-        color: rgba(0,0,0,.54);
+        color: rgba(0, 0, 0, .54);
     }
-    .loading_img{
+    .loading_img {
         width: 100%;
     }
 </style>

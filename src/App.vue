@@ -19,9 +19,6 @@
     export default class App extends Vue {
         transitionName = 'page-left'
 
-        created() {
-        }
-
         @Watch('$route')
         onRouteChanged(to: any, from: any) {
             // 刷新时不需要过渡
