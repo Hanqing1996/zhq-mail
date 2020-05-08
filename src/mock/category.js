@@ -23,6 +23,7 @@ const category = Mock.mock({
         "category_img": "@img(260x104,@color)",
         "category_id": "@id"
       }
+
     ]
   }
 })

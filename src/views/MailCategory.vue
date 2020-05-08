@@ -19,6 +19,7 @@
                 </div>
 
 
+
                 <div class="list-wrap" @touchstart="wrapScroll">
                     <div
                             v-for="(list,index) in categoryList"
@@ -40,6 +41,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
         <Nav/>
@@ -69,10 +71,6 @@
         loading = true
         offsetTop: any[] = []
         scrollTimer = 0
-
-        created() {
-            this.getList()
-        }
 
         beforeRouteEnter(to: any, from: any, next: any) {
             if (!from.name) {

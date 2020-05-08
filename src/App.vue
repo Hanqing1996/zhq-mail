@@ -17,8 +17,10 @@
         computed: {...mapState(['viewLoading'])},
     })
     export default class App extends Vue {
+        // 路由切换时的动画过渡方向。比如"首页"->"分类"，则 transitionName='page-left'
         transitionName = 'page-left'
 
+        // 监视路由变化
         @Watch('$route')
         onRouteChanged(to: any, from: any) {
             // 刷新时不需要过渡

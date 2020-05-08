@@ -77,13 +77,13 @@
             this.$NProgress.remove()
         }
 
-
         beforeRouteEnter(to: any, from: any, next: any) {
             if (!from.name) {
                 // 刷新
                 next((vm: any) => vm.getNavList())
             } else {
                 // 路由切换
+
                 fetch('navList', {}).then(res => {
                     next((vm: any) => vm.setNavList(res))
                 })
@@ -91,13 +91,21 @@
         }
 
         getNavList() {
+            console.log('getNavList');
             this.$fetch('navList', {}).then(res => {
                 this.setNavList(res)
             })
         }
 
+        created(){
+
+            console.log('created');
+        }
+
 
         setNavList(res: any) {
+            console.log('setNavList');
+
             let list = res.data.list
             list.forEach((item: any) => {
                 item.hasData = false

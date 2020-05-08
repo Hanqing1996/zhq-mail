@@ -136,22 +136,71 @@ onRouteChanged(to: any, from: any) {
 ```
 
 #### 路由切换 and 刷新
-* 路由切换
-> 由路由获取数据
-* 刷新
-> 由组件获取数据
+1. 过渡效果的差异
+> 比如 App.vue 页面中
 ```
-beforeRouteEnter(to: any, from: any, next: any) {
+// 监视路由变化
+@Watch('$route')
+onRouteChanged(to: any, from: any) {
+    // 刷新时不需要过渡
     if (!from.name) {
-        // 刷新
-        console.log('你刷新了');
-        next((vm: any) => vm.getList())
-    } else {
-        // 路由切换
-        console.log('你切换路由了');
-        fetch('category', {}).then(res => {
-            next((vm: any) => vm.setList(res))
-        })
+        this.transitionName = ''
+        return
+    }
+    if (to.meta.index && from.meta.index) {
+        this.transitionName = to.meta.index < from.meta.index ? 'page-right' : 'page-left'
     }
 }
 ```
+2. [数据获取的差异](https://router.vuejs.org/zh/guide/advanced/data-fetching.html#%E6%95%B0%E6%8D%AE%E8%8E%B7%E5%8F%96)
+* 路由切换
+    * 没有加载状态（约定俗成）
+    * 在导航转入新的路由前获取数据
+* 刷新
+    * 有加载状态（约定俗成）
+    * 先完成导航，然后在接下来的组件生命周期钩子中获取数据。
+> 具体做法是操纵<code>beforeRouteEnter</code>以控制数据获取是在导航结束后（即进入组件生命周期），还是导航过程中实现。
+
+#### 关于 viewLoading，
+1. viewLoading 表示页面处于加载状态（Skeleton）
+2. main.ts 中，设置了在进入新路由（刷新 or 切换路由）前，都会重置 viewLoading
+3. 某个页面在获取到数据后，修改 viewLoading,表示"数据已获取，加载状态结束"
+
+#### 关于 NProgress
+1. NProgress.start() 表示开启进度条，NProgress.done() 表示关闭进度条，
+2. main.ts 中，设置了在进入新路由（刷新 or 切换路由）前，都会开启 NProgress
+3. 某个页面在获取到数据后，<code>this.$NProgress.done()</code> 表示"数据已获取，进度100%"
+
+#### beforeRouteEnter 的 next 在什么时候执行
+> "用创建好的实例调用 beforeRouteEnter 守卫中传给 next 的回调函数。"
+```
+beforeRouteEnter(to: any, from: any, next: any) {
+    next((vm: any) => vm.getNavList())
+}
+
+getNavList() {
+    console.log('getNavList');
+}
+
+created(){
+    console.log('created');
+}
+```
+执行结果
+```
+created
+getNavList
+```
+说明 next 是在 created 之后执行的
+
+
+
+
+
+
+
+
+
+
+    
+

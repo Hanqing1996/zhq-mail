@@ -100,7 +100,6 @@
             }
 
             this.$fetch('getCode', {userName: this.userName}).then((res: any) => {
-                console.log(res);
                 this.timer = setInterval(() => {
                     this.countdown--
                     if (this.countdown === 0) {
