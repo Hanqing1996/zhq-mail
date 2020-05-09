@@ -4,7 +4,7 @@
         <Title title="商品列表"/>
         <div class="app-view-wrapper">
             <div class="app-view app-view-with-header app-view-with-footer">
-                <ol>
+                <ol style="padding-bottom: 10px">
 
                     <router-link
                             v-for="product in commodityList"
@@ -23,92 +23,20 @@
                                 <p>{{product.name}}</p>
                             </div>
                             <div class="item-brief flex">
-                                <p>
-                                    {{product.product_desc}}
+                                <p v-html="product.product_desc">
                                 </p>
                             </div>
                             <div class="item-intro-price flex">
-                                <span class="price">&nbsp;{{product.price}}</span>
+                                <span class="price" style="padding-left: 1em">&nbsp;{{product.price}}</span>
                             </div>
                         </div>
                     </router-link>
-
-
-
-                    <li class="item ui-flex align-center">
-                        <a class="item-img exposure">
-                            <img src="//cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/cbbf4728cf72469446dd98a51c564537.jpg"
-                                 lazy="loaded">
-                            <span>
-                <img src="//i8.mifile.cn/v1/a1/289039eb-c3ed-7c26-69c3-5b07b72a797d.webp?w=120&amp;h=48">
-              </span>
-                        </a>
-                        <div class="item-intro box-flex flex">
-                            <div class="item-name flex">
-                                <p>小米8 6GB+64GB</p>
-                            </div>
-                            <div class="item-brief flex">
-                                <p>
-                                    <font color="#ff4a00">「新品开售」</font>全球首款双频GPS / 骁龙845处理器 / 红外人脸解锁 / AI变焦双摄 / 三星
-                                    AMOLED 屏 / AI语音助手 / 多功能NFC
-                                </p>
-                            </div>
-                            <div class="item-intro-price flex">
-                                <span class="price">&nbsp;2699</span>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="item ui-flex align-center">
-                        <a class="item-img exposure">
-                            <img src="//cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/cbbf4728cf72469446dd98a51c564537.jpg"
-                                 lazy="loaded">
-                            <span>
-                <img src="//i8.mifile.cn/v1/a1/289039eb-c3ed-7c26-69c3-5b07b72a797d.webp?w=120&amp;h=48">
-              </span>
-                        </a>
-                        <div class="item-intro box-flex flex">
-                            <div class="item-name flex">
-                                <p>小米8 6GB+128GB</p>
-                            </div>
-                            <div class="item-brief flex">
-                                <p>
-                                    <font color="#ff4a00">「新品开售」</font>全球首款双频GPS / 骁龙845处理器 / 红外人脸解锁 / AI变焦双摄 / 三星
-                                    AMOLED 屏 / AI语音助手 / 多功能NFC
-                                </p>
-                            </div>
-                            <div class="item-intro-price flex">
-                                <span class="price">&nbsp;2999</span>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="item ui-flex align-center">
-                        <a class="item-img exposure">
-                            <img src="//cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/cbbf4728cf72469446dd98a51c564537.jpg"
-                                 lazy="loaded">
-                            <span>
-                <img src="//i8.mifile.cn/v1/a1/289039eb-c3ed-7c26-69c3-5b07b72a797d.webp?w=120&amp;h=48">
-              </span>
-                        </a>
-                        <div class="item-intro box-flex flex">
-                            <div class="item-name flex">
-                                <p>小米8 6GB+256GB</p>
-                            </div>
-                            <div class="item-brief flex">
-                                <p>
-                                    <font color="#ff4a00">「新品开售」</font>全球首款双频GPS / 骁龙845处理器 / 红外人脸解锁 / AI变焦双摄 / 三星
-                                    AMOLED 屏 / AI语音助手 / 多功能NFC
-                                </p>
-                            </div>
-                            <div class="item-intro-price flex">
-                                <span class="price">&nbsp;3299</span>
-                            </div>
-                        </div>
-                    </li>
--->
-
                 </ol>
+                <MiRecommand/>
             </div>
+
         </div>
+
         <Nav/>
 
 
@@ -119,6 +47,9 @@
     import {Prop, Watch} from "vue-property-decorator";
     import fetch from '@/api/fetch'
     import Title from "@/components/Title.vue"
+    import MiRecommand from "@/components/MiRecommend.vue"
+
+    import DOMPurify from 'dompurify';
 
     import Component from 'vue-class-component'
 
@@ -128,7 +59,7 @@
         'beforeRouteLeave'
     ])
 
-    @Component({components: {Title}})
+    @Component({components: {Title,MiRecommand}})
     export default class MailList extends Vue {
 
         commodityList = []
@@ -146,14 +77,15 @@
         }
 
         getList() {
-            this.$fetch('commodity', {}).then(res => {
+            this.$fetch('commodity', {
+                category_id:this.$route.params.id
+            }).then(res => {
                 this.setList(res)
             })
         }
 
         setList(res: any) {
-            this.commodityList = res.data.list
-            console.log(this.commodityList);
+            this.commodityList = res.data.list.map((item:any)=>{return{...item,product_desc:DOMPurify.sanitize(item.product_desc)}})
             this.$store.commit('setViewLoading', false)
             this.$NProgress.done()
         }

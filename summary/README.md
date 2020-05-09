@@ -194,7 +194,20 @@ getNavList
 说明 next 是在 created 之后执行的
 
 
+#### v-html
+```
+<p v-html="product.product_desc">
+```
 
+#### 防 XSS 攻击
+* [dompurify](https://github.com/cure53/DOMPurify)
+```
+import DOMPurify from 'dompurify';
+
+this.commodityList = res.data.list.map((item:any)=>{return{...item,product_desc:DOMPurify.sanitize(item.product_desc)}})
+
+<p v-html="product.product_desc">
+```
 
 
 

@@ -868,6 +868,13 @@
   resolved "https://registry.npm.taobao.org/@types/color-name/download/@types/color-name-1.1.1.tgz#1c1261bbeaa10a8055bbc5d8ab84b7b2afc846a0"
   integrity sha1-HBJhu+qhCoBVu8XYq4S3sq/IRqA=
 
+"@types/dompurify@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.npmjs.org/@types/dompurify/-/dompurify-2.0.1.tgz#0bf3a9f8ee21d81adb20b8c374ab034d6a74dbf7"
+  integrity sha512-OQ16dECrRv/I//woKkVUxyVGYR94W3qp3Wy//B63awHVe3h/1/URFqP5a/V2m4k01DEvWs1+z7FWW3xfM1lH3Q==
+  dependencies:
+    "@types/trusted-types" "*"
+
 "@types/events@*":
   version "3.0.0"
   resolved "https://registry.npm.taobao.org/@types/events/download/@types/events-3.0.0.tgz#2862f3f58a9a7f7c3e78d79f130dd4d71c25c2a7"
@@ -911,6 +918,11 @@
   version "5.2.1"
   resolved "https://registry.npmjs.org/@types/swiper/-/swiper-5.2.1.tgz#889ab9c9041007c27ffa3220097303b6b1670608"
   integrity sha512-O8Xm3xNbDH7BS1HQqu8xSfqAfLCHsu+D4r7X1k+kuqZ5sEPGAmaoPRzF/P+W1v5lJ58W1UmfsFo38+0A7xE5qg==
+
+"@types/trusted-types@*":
+  version "1.0.4"
+  resolved "https://registry.npmjs.org/@types/trusted-types/-/trusted-types-1.0.4.tgz#922d092c84a776a59acb0bd6785fd82b59b9bad5"
+  integrity sha512-6jtHrHpmiXOXoJ31Cg9R+iEVwuEKPf0XHwFUI93eEPXx492/J2JHyafkleKE2EYzZprayk9FSjTyK1GDqcwDng==
 
 "@types/webpack-env@^1.15.1":
   version "1.15.1"
@@ -2942,6 +2954,11 @@ domhandler@^2.3.0:
   integrity sha1-iAUJfpM9ZehVRvcm1g9euItE+AM=
   dependencies:
     domelementtype "1"
+
+dompurify@^2.0.11:
+  version "2.0.11"
+  resolved "https://registry.npmjs.org/dompurify/-/dompurify-2.0.11.tgz#cd47935774230c5e478b183a572e726300b3891d"
+  integrity sha512-qVoGPjIW9IqxRij7klDQQ2j6nSe4UNWANBhZNLnsS7ScTtLb+3YdxkRY8brNTpkUiTtcXsCJO+jS0UCDfenLuA==
 
 domready@1.0.8:
   version "1.0.8"
