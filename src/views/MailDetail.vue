@@ -22,7 +22,9 @@
                             <div class="swiper-slide"
                                  v-for="(imgUrl,index) in galleryView"
                                  :key="index">
-                                <img :src="imgUrl" alt="" class="img">
+                                <img :data-src="imgUrl" alt="" class="img swiper-lazy">
+                                <div class="swiper-lazy-preloader"></div>
+
                             </div>
                         </div>
                         <div class="swiper-pagination"></div>
@@ -729,6 +731,10 @@
                         el: '.swiper-pagination',
                         type: 'bullets',
                     },
+                    // Disable preloading of all images
+                    preloadImages: false,
+                    // Enable lazy loading
+                    lazy: true
                 })
             })
 

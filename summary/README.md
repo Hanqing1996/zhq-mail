@@ -258,10 +258,27 @@ this.$nextTick(() => {
 * pagination:分页
 ```
 // MailDetail.vue
-
+this.$nextTick(() => {
+    new Swiper('.swiper-container', {
+        pagination: {
+            el: '.swiper-pagination',
+            type: 'bullets',
+        },
+    })
+})
 ```
-
-
+* [Lazy Loading](https://swiperjs.com/api/#lazy)
+```
+// MailDetail.vue
+this.$nextTick(() => {
+    new Swiper('.swiper-container', {
+        // Disable preloading of all images
+        preloadImages: false,
+        // Enable lazy loading
+        lazy: true
+    })
+})
+```
 
 
 
