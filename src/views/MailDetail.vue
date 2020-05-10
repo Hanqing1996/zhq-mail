@@ -16,20 +16,22 @@
                     </header>
 
 
-                    <div class="swiper-container" style="width: 100%;height:100%">
+                    <div class="swiper-container gallery-view swiper-container-horizontal">
                         <div class="swiper-wrapper">
-                            <div
-                                    v-for="(imgUrl,index) in galleryView"
-                                    :key="index"
-                                    class="swiper-slide"
-                                    style="display: inline-block">
-                                <img class="img swiper-lazy swiper-lazy-loaded"
-                                     :src="imgUrl"
-                                     style="width: 100%;height: 100%">
+
+                            <div class="swiper-slide"
+                                 v-for="(imgUrl,index) in galleryView"
+                                 :key="index">
+                                <img :src="imgUrl" alt="" class="img">
                             </div>
                         </div>
                         <div class="swiper-pagination"></div>
                     </div>
+
+
+
+
+
 
 
                     <div class="overview">
@@ -674,6 +676,7 @@
     import Vue from 'vue'
     import {Prop, Watch} from "vue-property-decorator";
     import Swiper from 'swiper'
+    import 'swiper/css/swiper.css'
     import fetch from '@/api/fetch'
 
     import Component from 'vue-class-component'
@@ -690,6 +693,7 @@
         productData = null
         galleryView = null
 
+
         beforeRouteEnter(to: any, from: any, next: any) {
             if (!from.name) {
                 // 刷新
@@ -697,7 +701,7 @@
             } else {
                 // 路由切换
                 fetch('productView', {
-                    commodity_id: this.$route.params.id
+                    commodity_id: to.params.id
                 }).then(res => {
                     next((vm: any) => vm.setList(res))
                 })
@@ -706,7 +710,7 @@
 
         getList() {
             this.$fetch('productView', {
-                category_id: this.$route.params.id
+                commodity_id: this.$route.params.id
             }).then(res => {
                 this.setList(res)
             })
@@ -728,11 +732,13 @@
                 })
             })
 
+
         }
 
 
     }
 </script>
+
 <style scoped>
     .app-view {
         padding-bottom: 52px;
