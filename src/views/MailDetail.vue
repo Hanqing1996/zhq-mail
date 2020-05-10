@@ -37,23 +37,27 @@
 
 
                     <div class="overview">
-                        <div class="goods-name ui-flex align-center justify-start">小米6X</div>
-                        <div class="goods-brief">
-                            <font color="#ff4a00">「4GB+32GB立减100元」「4GB+64GB赠价值49元移动电源」</font>
-                            前置2000万“治愈系”自拍 / 后置2000万 AI双摄 / “杨柳腰”纤薄机身 / 标配骁龙660 AIE处理器
+                        <div class="goods-name ui-flex align-center justify-start">{{titleView&&titleView.name}}</div>
+                        <div class="goods-brief" v-html="titleView&&titleView.product_desc">
                         </div>
                         <div class="goods-price layout align-end justify-start">
-                            <div class="price cur-price">1599</div>
-                            <div class="price origin-price">1499</div>
+                            <div class="price cur-price">{{titleView&&titleView.price}}</div>
+                            <div class="price origin-price">{{titleView&&titleView.market_price}}</div>
                         </div>
                     </div>
+
+
+
+
+
+
                     <div class="product-section more">
                         <div class="border-top-1px ui-flex align-start justify-start J_linksign-customize">
                             <div class="title">促销</div>
                             <div class="flex pt1-2x">
                                 <div class="ui-flex align-center justify-start act-icon mb2x">
-                                    <div class="icon-desc border-1px">赠品</div>
-                                    <div class="icon-title">赠移动电源</div>
+                                    <div class="icon-desc border-1px">{{canJoinActs&&canJoinActs.type_desc}}</div>
+                                    <div class="icon-title">{{canJoinActs&&canJoinActs.title}}</div>
                                 </div>
                             </div>
                         </div>
@@ -694,6 +698,14 @@
     export default class MailDetail extends Vue {
         productData = null
         galleryView = null
+        detailSwiper?:Swiper=undefined
+        titleView=null
+        canJoinActs=null
+
+        destroyed(){
+            this.detailSwiper&&this.detailSwiper.removeAllSlides()
+            this.$NProgress.remove()
+        }
 
 
         beforeRouteEnter(to: any, from: any, next: any) {
@@ -721,12 +733,16 @@
         setList(res: any) {
             this.productData = res.data
             this.galleryView = res.data.view_content.galleryView.galleryView
-            console.log(this.galleryView);
+            this.titleView=res.data.view_content.titleView.titleView
+            this.canJoinActs=res.data.view_content.titleView.titleView.canJoinActs[0]
+            console.log(this.titleView);
+            console.log(this.canJoinActs);
+
             this.$store.commit('setViewLoading', false)
             this.$NProgress.done()
 
             this.$nextTick(() => {
-                new Swiper('.swiper-container', {
+                this.detailSwiper=new Swiper('.swiper-container', {
                     pagination: {
                         el: '.swiper-pagination',
                         type: 'bullets',

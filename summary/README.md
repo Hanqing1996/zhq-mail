@@ -279,7 +279,13 @@ this.$nextTick(() => {
     })
 })
 ```
-
+* 记得销毁
+```
+destroyed(){
+    this.detailSwiper&&this.detailSwiper.removeAllSlides()
+    this.$NProgress.remove()
+}
+```
 
 
     
