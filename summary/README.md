@@ -194,6 +194,40 @@ getNavList
 说明 next 是在 created 之后执行的
 
 
+#### 页面跳转
+* category 页面跳转到 List 页面
+```
+// CategoryGroup.vue
+<router-link
+        v-for="product in products"
+        :key="product.category_id"
+        class="product"
+        tag="div"
+        :to="{name: 'list', params: {id: product.category_id}}">
+    <a class="exposure item">
+        <div class="img">
+            <img class="big" v-lazy="product.img_url">
+        </div>
+        <div class="name">{{product.product_name}}</div>
+    </a>
+</router-link>
+```
+```
+// router/index.ts
+  {
+    path: '/commodity/list/:id',
+    name: 'list',
+    component: MailList
+  }
+```
+* 注意，$fetch 是向 rap2 发送请求以获取数据，不是用于页面跳转的
+```
+this.$fetch('commodity', {
+    category_id:this.$route.params.id
+}).then(res => {
+    this.setList(res)
+})
+```
 #### v-html
 ```
 <p v-html="product.product_desc">
@@ -209,7 +243,23 @@ this.commodityList = res.data.list.map((item:any)=>{return{...item,product_desc:
 <p v-html="product.product_desc">
 ```
 
+#### [Swiper.js](https://swiperjs.com/)
+* slidesPerView:同时预览多个
+```
+// MailHome.vue
+this.$nextTick(() => {
+    this.homeSwiper = new Swiper('.swiper-container', {
+        // 一行展示个数
+        slidesPerView: this.slidesPerView,
+        freeMode: true
+    })
+})
+```
+* pagination:分页
+```
+// MailDetail.vue
 
+```
 
 
 

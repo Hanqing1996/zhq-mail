@@ -247,7 +247,11 @@ let productView = Mock.mock({
         "viewType": "descTabsView"
       },
       "galleryView": {
-        "galleryView|5": [],
+        "galleryView|5": [
+          "//cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/a4842f9afc615164af83c2088a412fc0.jpg?",
+          "//cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/bef0f60896e9adcc9251fe9940bf8317.jpg?",
+          "//cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/640cd4de9154ab608110093bfa257b59.jpg?"
+        ],
         "viewType": "galleryView"
       },
       "relatePackageView": {

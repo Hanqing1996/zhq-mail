@@ -50,7 +50,6 @@
 
         setList(res: any) {
             this.productList = res.data.recom_list
-            console.log(this.productList);
             this.$store.commit('setViewLoading', false)
             this.$NProgress.done()
         }

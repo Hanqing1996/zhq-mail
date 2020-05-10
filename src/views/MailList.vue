@@ -11,7 +11,7 @@
                             :key="product.product_id"
                             class="item ui-flex align-center"
                             tag="li"
-                            to="">
+                            :to="{name: 'detail', params: {id: product.product_id}}">
                         <a class="item-img exposure">
                             <img :src="product.img_url"  lazy="loaded">
                             <span>
