@@ -31,11 +31,6 @@
                     </div>
 
 
-
-
-
-
-
                     <div class="overview">
                         <div class="goods-name ui-flex align-center justify-start">{{titleView&&titleView.name}}</div>
                         <div class="goods-brief" v-html="titleView&&titleView.product_desc">
@@ -45,10 +40,6 @@
                             <div class="price origin-price">{{titleView&&titleView.market_price}}</div>
                         </div>
                     </div>
-
-
-
-
 
 
                     <div class="product-section more">
@@ -100,248 +91,56 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="comment-view space-top">
                         <a href="/comment/list/2181500027"
                            class="comment-info border-bottom-1px box-flex align-center justify-space-between entry-more">
-                            <div class="comment-count">用户评价(8825)</div>
+                            <div class="comment-count">用户评价({{commentView&&commentView.detail.comments_total}})</div>
                             <div class="comment-degree">
-                                96.6%
+                                {{commentView&&commentView.detail.satisfy_per}}%
                                 <span>满意</span>
                             </div>
                         </a>
-                        <div class="comment-box">
-                            <div class="item">
-                                <div class="comment-header layout align-center">
-                                    <div class="avatar-img-box">
-                                        <img src="//s1.mi-img.com/mfsv2/avatar/fdsc3/p017UcFwpbQW/GJilSq8FbRrOUx_90.jpg">
-                                    </div>
-                                    <div class="user-info flex">
-                                        <p class="name">黄之南</p>
-                                        <p class="comment-date">2018-06-04</p>
-                                    </div>
-                                    <div class="like">
-                                        <span>超爱</span>
-                                    </div>
-                                </div>
-                                <div class="comment-content">
-                                    <div class="text">恰好今天毕业了，用中午刚到的小米6x拍了几张毕业留恋照。没几天就要高考了，希望能给我带来好运。。。</div>
-                                    <div class="photos p6">
-                                        <img class="lazy"
-                                             src="//cdn.cnbj0.fds.api.mi-img.com/b2c-data-mishop/b115797abcb3ef5199a53b51c7743014.webp"
-                                             lazy="loaded">
-                                        <img class="lazy"
-                                             src="//cdn.cnbj0.fds.api.mi-img.com/b2c-data-mishop/0bc7aaa403cca148faff52adc7ea912e.webp"
-                                             lazy="loaded">
-                                        <img class="lazy"
-                                             src="//cdn.cnbj0.fds.api.mi-img.com/b2c-data-mishop/8e4669e01f931a74fa698b13d1460c3a.webp"
-                                             lazy="loaded">
-                                        <img class="lazy"
-                                             src="//cdn.cnbj0.fds.api.mi-img.com/b2c-data-mishop/c180c65344d83f5cf905d5c9624306be.webp"
-                                             lazy="loaded">
-                                        <img class="lazy"
-                                             src="//cdn.cnbj0.fds.api.mi-img.com/b2c-data-mishop/68adc354dd5ce45b8c0fceb030d75dd7.webp"
-                                             lazy="loaded">
-                                        <img class="lazy"
-                                             src="//cdn.cnbj0.fds.api.mi-img.com/b2c-data-mishop/5450e974962d0145552db5e25de628be.webp"
-                                             lazy="loaded">
-                                    </div>
-                                </div>
-                                <div class="comment-reply">
-                                    <div class="comment-replay-item official">
-                                        <div class="text">
-                                            <div class="avatar"></div>
-                                            <span>官方回复：</span>
-                                            又到六月高考日，梓梓学子挥汗如雨。从来是天道酬勤，一笔在手，淋漓大气生。今看你，论文韬武略，古今经典；家谋国计，上品斯文。一气呵成，行云流水，锦绣华章不染尘。还须问？上战场夺魁居榜首，临考场横扫千军！祝愿高考旗开得胜，前程似锦。感谢您对小米的支持。
-                                        </div>
-                                    </div>
-                                    <div class="comment-replay-item">
-                                        <div class="text">
-                                            <div class="avatar">
-                                                <img src="https://cdn.cnbj0.fds.api.mi-img.com/b2c-data-mishop/f790b51a76afd7b41522048fa779d69d.jpg">
-                                            </div>
-                                            <span>相信lie：</span>
-                                            是全网通嘛
-                                        </div>
-                                    </div>
-                                    <div class="comment-replay-item">
-                                        <div class="text">
-                                            <div class="avatar">
-                                                <img src="https://s1.mi-img.com/mfsv2/avatar/fdsc3/p01UFdS2LciC/7HzZGBbR3CXp0f.jpg">
-                                            </div>
-                                            <span>咖啡少年不加糖：</span>
-                                            哪里的考生
-                                        </div>
-                                    </div>
-                                    <div class="comment-replay-item">
-                                        <div class="text">
-                                            <div class="avatar">
-                                                <img src="https://cdn.cnbj0.fds.api.mi-img.com/b2c-data-mishop/c52c11c915d43e0ac3286161eec4fcaf.jpg">
-                                            </div>
-                                            <span>涂山月初：</span>
-                                            待电怎么样，还有充电速度怎么样
-                                        </div>
-                                    </div>
-                                    <!-- <div class="more border-top-1px">查看全部8条评论</div> -->
-                                </div>
-                            </div>
-                        </div>
+                        <Comment :comment="commentView&&commentView.list[0]"/>
                     </div>
+
                     <div class="description-view space-top">
                         <div class="tab-header">
                             <div class="tab-header-inner border-bottom-1px box-flex align-center">
-                                <a class="flex on">概述</a>
-                                <a class="flex">参数</a>
+                                <a
+                                        v-for="(desc,index) in descTabsView"
+                                        :key="index"
+                                        :class="{on:index==descTabsViewIndex}"
+                                        @click="descTabsViewIndex=index"
+                                        class="flex">{{desc.name}}</a>
                             </div>
                         </div>
                         <div class="tab-view">
-                            <div class="tab-item" style="">
+                            <div
+                                    v-for="(desc,index) in descTabsView"
+                                    :key="index"
+                                    v-show="index==descTabsViewIndex"
+                                    class="tab-item">
                                 <section>
                                     <div class="desc-img-box">
-                                        <img src="//cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/e996427a3e66b49399abcd4d0f03387b.jpg?w=1080&amp;h=1920"
-                                             lazy="loaded">
-                                    </div>
-                                </section>
-                                <section>
-                                    <div class="desc-img-box">
-                                        <img src="//cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/d5cf4d958e3ee021b68fc07c23550c62.jpg?w=1080&amp;h=855"
-                                             lazy="loaded">
-                                    </div>
-                                </section>
-                                <section>
-                                    <div class="desc-img-box">
-                                        <img src="//cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/8920ef08f50965a43b08dee549511a04.jpg?w=1080&amp;h=713"
-                                             lazy="loaded">
-                                    </div>
-                                </section>
-                                <section style="display:none;">
-                                    <div class="desc-img-box">
-                                        <img src="//cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/171cd5f240fcf62bc93d1c520e050dab.jpg?w=1080&amp;h=1474"
-                                             lazy="loaded">
-                                    </div>
-                                </section>
-                                <section style="display:none;">
-                                    <div class="desc-img-box">
-                                        <img src="//cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/3f7eecf3f77f28cd71669913b005e412.jpg?w=1080&amp;h=1382"
-                                             lazy="loaded">
-                                    </div>
-                                </section>
-                                <section style="display:none;">
-                                    <div class="desc-img-box">
-                                        <img src="//cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/020b8b5a0c9c923babed2628e32f0615.jpg?w=1080&amp;h=1475"
-                                             lazy="loaded">
-                                    </div>
-                                </section>
-                                <section style="display:none;">
-                                    <div class="desc-img-box">
-                                        <img src="//cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/ca626a8f020ce91d912ff8d169d2ba88.jpg?w=1080&amp;h=960"
-                                             lazy="loaded">
-                                    </div>
-                                </section>
-                                <section style="display:none;">
-                                    <div class="desc-img-box">
-                                        <img src="//cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/aa27c0965135cde1d9f94e3609c9b241.jpg?w=1080&amp;h=774"
-                                             lazy="loaded">
-                                    </div>
-                                </section>
-                                <section style="display:none;">
-                                    <div class="desc-img-box">
-                                        <img src="//cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/2dd9770847f0335513460853aa4b60ca.jpg?w=1080&amp;h=1716"
-                                             lazy="loaded">
-                                    </div>
-                                </section>
-                                <section style="display:none;">
-                                    <div class="desc-img-box">
-                                        <img src="//cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/e8630b7ae21209ed7469be6de4ddb2a1.jpg?w=1080&amp;h=877"
-                                             lazy="loaded">
-                                    </div>
-                                </section>
-                                <section style="display:none;">
-                                    <div class="desc-img-box">
-                                        <img src="//cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/f4555a1c851b8d88b87cbe6988f25670.jpg?w=1080&amp;h=1664"
-                                             lazy="loaded">
-                                    </div>
-                                </section>
-                                <section style="display:none;">
-                                    <div class="desc-img-box">
-                                        <img src="//cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/048e8b533d1a7a5affe82720f1cfba71.jpg?w=1080&amp;h=1977"
-                                             lazy="loaded">
-                                    </div>
-                                </section>
-                                <section style="display:none;">
-                                    <div class="desc-img-box">
-                                        <img src="//cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/ed24a95fcbc201d27e859c48529a6d8e.jpg?w=1080&amp;h=833"
-                                             lazy="loaded">
-                                    </div>
-                                </section>
-                                <section style="display:none;">
-                                    <div class="desc-img-box">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-                                             lazy="loading">
-                                    </div>
-                                </section>
-                                <a class="show-all-desc">查看全部图文详情 &gt;</a>
-                            </div>
-                            <div class="tab-item" style="display: none;">
-                                <section>
-                                    <div class="desc-img-box">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-                                             lazy="loading">
+                                        <img
+                                                v-for="(item,index2) in desc.showTabContent"
+                                                :key="index2"
+                                                :src="item.plainView.img"
+                                                lazy="loaded">
                                     </div>
                                 </section>
                                 <section>
-                                    <div class="desc-img-box">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-                                             lazy="loading">
+                                    <div class="desc-img-box" v-show="desc.showMore">
+                                        <img
+                                                v-for="(item,index3) in desc.moreTabContent"
+                                                :key="index3"
+                                                :src="item.plainView.img"
+                                                lazy="loaded">
                                     </div>
                                 </section>
-                                <section>
-                                    <div class="desc-img-box">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-                                             lazy="loading">
-                                    </div>
-                                </section>
-                                <section>
-                                    <div class="desc-img-box">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-                                             lazy="loading">
-                                    </div>
-                                </section>
-                                <section>
-                                    <div class="desc-img-box">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-                                             lazy="loading">
-                                    </div>
-                                </section>
-                                <section>
-                                    <div class="desc-img-box">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-                                             lazy="loading">
-                                    </div>
-                                </section>
-                                <section>
-                                    <div class="desc-img-box">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-                                             lazy="loading">
-                                    </div>
-                                </section>
-                                <section>
-                                    <div class="desc-img-box">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-                                             lazy="loading">
-                                    </div>
-                                </section>
-                                <section>
-                                    <div class="desc-img-box">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-                                             lazy="loading">
-                                    </div>
-                                </section>
-                                <section>
-                                    <div class="desc-img-box">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-                                             lazy="loading">
-                                    </div>
-                                </section>
+                                <a class="show-all-desc" v-show="!desc.showMore" @click="desc.showMore=true">查看全部图文详情 &gt;</a>
+
                             </div>
                         </div>
                     </div>
@@ -686,6 +485,8 @@
     import fetch from '@/api/fetch'
 
     import Component from 'vue-class-component'
+
+    import Comment from "@/components/Comment.vue";
     import DOMPurify from "dompurify";
 
     Component.registerHooks([
@@ -694,19 +495,21 @@
         'beforeRouteLeave'
     ])
 
-    @Component({components: {}})
+    @Component({components: {Comment}})
     export default class MailDetail extends Vue {
         productData = null
         galleryView = null
-        detailSwiper?:Swiper=undefined
-        titleView=null
-        canJoinActs=null
+        detailSwiper?: Swiper = undefined
+        titleView = null
+        canJoinActs = null
+        commentView = null
+        descTabsView = null
+        descTabsViewIndex = 0
 
-        destroyed(){
-            this.detailSwiper&&this.detailSwiper.removeAllSlides()
+        destroyed() {
+            this.detailSwiper && this.detailSwiper.removeAllSlides()
             this.$NProgress.remove()
         }
-
 
         beforeRouteEnter(to: any, from: any, next: any) {
             if (!from.name) {
@@ -731,18 +534,34 @@
         }
 
         setList(res: any) {
+
+            let descTabsView = res.data.view_content.descTabsView.descTabsView
+            descTabsView.forEach((item: any) => {
+
+                let tabContent = item.tabContent
+                if (tabContent.length > 3) {
+                    item.showTabContent = tabContent.slice(0, 3)
+                    item.moreTabContent = tabContent.slice(3)
+
+                } else {
+                    item.showTabContent = tabContent
+                }
+                item.showMore = false
+            })
+
+            this.descTabsView = descTabsView
+
             this.productData = res.data
             this.galleryView = res.data.view_content.galleryView.galleryView
-            this.titleView=res.data.view_content.titleView.titleView
-            this.canJoinActs=res.data.view_content.titleView.titleView.canJoinActs[0]
-            console.log(this.titleView);
-            console.log(this.canJoinActs);
+            this.titleView = res.data.view_content.titleView.titleView
+            this.canJoinActs = res.data.view_content.titleView.titleView.canJoinActs[0]
+            this.commentView = res.data.view_content.commentView.commentView
 
             this.$store.commit('setViewLoading', false)
             this.$NProgress.done()
 
             this.$nextTick(() => {
-                this.detailSwiper=new Swiper('.swiper-container', {
+                this.detailSwiper = new Swiper('.swiper-container', {
                     pagination: {
                         el: '.swiper-pagination',
                         type: 'bullets',
@@ -1085,97 +904,6 @@
 
     .box-flex > *, .box-inline-flex > * {
         flex: 1 1 auto;
-    }
-
-    .comment-box {
-        background: #fff;
-        text-align: left;
-    }
-
-    .comment-box .item {
-        padding: 12px 16px 16px;
-    }
-
-    .comment-box .item .comment-header .avatar-img-box {
-        margin-right: 12px;
-        width: 40px;
-        height: 40px;
-        overflow: hidden;
-        border-radius: 100%;
-    }
-
-    .comment-box .item .comment-header .avatar-img-box img {
-        width: 100%;
-    }
-
-    .comment-box .item .comment-header .name {
-        font-size: 13px;
-    }
-
-    .comment-box .item .comment-header .comment-date {
-        margin-top: 2.5px;
-        color: rgba(0, 0, 0, .54);
-        font-size: 11px;
-    }
-
-    .comment-box .item .comment-header .like {
-        padding-left: 25px;
-        background: transparent url(../assets/images/comment-like.png) no-repeat 0;
-        background-size: auto 100%;
-        width: 25px;
-        height: 18px;
-        line-height: 18px;
-        color: #ff6700;
-        font-size: 11px;
-    }
-
-    .comment-box .item .comment-content .text {
-        padding: 16px 0;
-        line-height: 20px;
-        font-size: 13px;
-    }
-
-    .comment-box .item .comment-content .photos {
-        margin-bottom: 6px;
-    }
-
-    .comment-box .item .comment-content .photos img {
-        width: 83px;
-        height: 83px;
-        margin: 0 4px 4px 0;
-    }
-
-    .comment-box .item .comment-reply {
-        padding: 8px;
-        background: #f6f6f6;
-    }
-
-    .comment-box .item .comment-reply .comment-replay-item {
-        overflow: hidden;
-        padding: 2.5px 0;
-    }
-
-    .comment-box .item .comment-reply .comment-replay-item .text {
-        font-size: 11px;
-        line-height: 22px;
-    }
-
-    .comment-box .item .comment-reply .comment-replay-item.official .avatar {
-        background: transparent url(../assets/images/milogo.png) no-repeat 50%;
-        background-size: cover;
-    }
-
-    .comment-box .item .comment-reply .comment-replay-item .avatar {
-        float: left;
-        width: 16px;
-        height: 16px;
-        overflow: hidden;
-        border-radius: 100%;
-        margin-right: 10px;
-    }
-
-    .comment-box .item .comment-reply .comment-replay-item.official span {
-        color: #ff6700;
     }
 
     .container .description-view .tab-header {

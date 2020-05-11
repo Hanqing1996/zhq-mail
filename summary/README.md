@@ -288,5 +288,125 @@ destroyed(){
 ```
 
 
-    
+#### 为什么要先处理（源数据），再赋值（this.xxx=...）
+```
+//规范：先处理源数据，再赋值
 
+// 处理
+let descTabsView = res.data.view_content.descTabsView.descTabsView
+descTabsView.forEach((item: any) => {
+
+    let tabContent = item.tabContent
+    if (tabContent.length > 3) {
+        item.showTabContent = tabContent.slice(0, 3)
+        item.moreTabContent = tabContent.slice(3)
+
+    } else {
+        item.showTabContent = tabContent
+    }
+    item.showMore = false
+})
+
+// 赋值
+this.descTabsView = descTabsView
+
+this.productData = res.data
+this.galleryView = res.data.view_content.galleryView.galleryView
+this.titleView = res.data.view_content.titleView.titleView
+this.canJoinActs = res.data.view_content.titleView.titleView.canJoinActs[0]
+this.commentView = res.data.view_content.commentView.commentView
+```
+* this.person 可以检测到已有属性 name 的变化，从而做出响应
+```
+<div @click="updatePerson">update</div>
+<div>{{person}}</div>       // {name:'libai'} 变为 {name:'zhangfei'}，即UI数据也更新了
+
+export default class MailDetail extends Vue {
+    person=null
+
+    created(){
+        let obj={name:'libai'}
+        this.person=obj
+    }
+
+    updatePerson(){
+        this.person.name='zhangfei'
+        console.log(this.person);// {name:'zhangfei'},说明内存中的数据更新了
+    }
+}
+```
+* this.person 不能检测到新增属性 age 的变化，因而不能做出响应
+```
+<div @click="updatePerson">update</div>
+<div>{{person}}</div> // {name:'libai',age:12} 不变，即UI数据没有更新
+
+export default class MailDetail extends Vue {
+    person=null
+
+    created(){
+        let obj={name:'libai'}
+        this.person=obj
+        obj['age']=12
+    }
+
+    updatePerson(){
+        this.person.age=100
+        console.log(this.person); // {name:'libai',age:100},说明内存中的数据更新了
+    }
+}
+```
+
+
+#### 锁死
+> weight 是 obj.child.son 的新增属性
+```
+<div @click="updateSon">update</div>
+<div>{{person}}</div> // {name:'lilili',weight:1000} 不变
+
+export default class MailDetail extends Vue {
+    lock=null
+    person=null
+
+    created(){
+            let obj={child:{son:{name:'lilili'}}}
+            this.lock=obj.child // 把这句去掉或放在最后，son.weight 的变化就可以响应了
+            obj.child.son.weight=1000
+            console.log(this.lock)    
+            /* this.lock.son.weight 不具有 set,set 属性
+            son: Object
+                name: "lilili"
+                weight: "900"
+                get name: ƒ reactiveGetter()
+                set name: ƒ reactiveSetter(newVal)
+            get son: ƒ reactiveGetter()
+            set son: ƒ reactiveSetter(newVal)
+            */    
+            this.person=obj.child.son
+            console.log(this.person)
+            /* this.person.weight 不具有 set,get 属性
+            name: "lilili"
+            weight: 1000
+            get name: ƒ reactiveGetter()
+            set name: ƒ reactiveSetter(newVal)
+            */
+    }
+
+    updatePerson(){
+        this.person.weight='900'
+        console.log(this.person); // {name:'lilili',weight:900},说明内存中的数据更新了
+    }
+}
+```    
+* 应该这么理解
+1. 在 this.lock=obj.child 后，我们又为 obj.child.son 添加了 weight 属性。由于是在原内存地址上做的改动，this.lock.son.weight 属性不具备 get 和 set 属性。
+2. 注意 weight 是新增属性，所以没有被 vue 察觉。
+3. 之后 this.person=obj.child.son，vue 发现是该地址空间已设置过 get/set，于是不再重复设置，导致 this.person.weight 属性不具备 get 和 set 属性。
+
+
+#### [Vue 响应式原理](https://www.zhihu.com/search?type=content&q=Vue%20%E5%8E%9F%E7%90%86%20%E5%93%8D%E5%BA%94%E5%BC%8F%E5%8E%9F%E7%90%86)
+1. Vue 是怎么知道内存数据改变了？
+> 凡是具有 set 方法的数据属性，其变化都会被 Vue 发现
+2. Vue 怎么将内存数据与视图数据挂钩？
+> data 中的声明的每个属性，都拥有一个数组（依赖收集器 subs），保存着 谁依赖（使用）了它。当页面使用到某个属性时，页面的 watcher 就会被放到对应属性的依赖收集器 subs 中。该过程称为依赖收集。
+3. Vue 在内存数据变化后，如何通知视图数据更新？
+> 比如当 name 改变（触发 set,被Vue 发现）的时候，name 会遍历自己的依赖收集器 subs，逐个通知 watcher，让 watcher 完成更新。该过程称为依赖更新。
