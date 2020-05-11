@@ -139,252 +139,61 @@
                                                 lazy="loaded">
                                     </div>
                                 </section>
-                                <a class="show-all-desc" v-show="!desc.showMore" @click="desc.showMore=true">查看全部图文详情 &gt;</a>
+                                <a class="show-all-desc" v-show="!desc.showMore" @click="desc.showMore=true">查看全部图文详情
+                                    &gt;</a>
 
                             </div>
                         </div>
                     </div>
-                    <div class="recommend-box space-top">
-                        <div class="recommend-title">为你推荐</div>
-                        <div class="recommend-list layout row wrap align-center align-content-start justify-space-between J_linksign-customize">
-                            <div class="goods-item">
-                                <a data-log_code="recom_product_12-0#eid=24:0:0:0:0:0:0:0:0:0&amp;tid=DetailRec-78cpaAwFqwUTL0eVFuqCzg==&amp;page=product&amp;pid=6259"
-                                   class="exposure">
-                                    <div class="goods-img-box">
-                                        <img class="lazy"
-                                             src="//i8.mifile.cn/v1/a1/f0ea0c6b-96b5-c85b-d2b4-e4aeaabea277!360x360.webp"
-                                             lazy="loaded">
-                                    </div>
-                                    <div class="goods-info">
-                                        <div class="goods-name no-wrap">小米5X 64GB</div>
-                                        <div class="goods-price price">1499</div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="goods-item">
-                                <a data-log_code="recom_product_12-1#eid=24:0:0:0:0:0:0:0:0:0&amp;tid=DetailRec-78cpaAwFqwUTL0eVFuqCzg==&amp;page=product&amp;pid=8030"
-                                   class="exposure">
-                                    <div class="goods-img-box">
-                                        <img class="lazy"
-                                             src="//cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/8612f157af2c116b7e3fc47356cdb7be.jpg?thumb=1&amp;w=360&amp;h=360"
-                                             lazy="loaded">
-                                    </div>
-                                    <div class="goods-info">
-                                        <div class="goods-name no-wrap">红米S2 4GB+64GB</div>
-                                        <div class="goods-price price">1299</div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="goods-item">
-                                <a data-log_code="recom_product_12-2#eid=24:0:0:0:0:0:0:0:0:0&amp;tid=DetailRec-78cpaAwFqwUTL0eVFuqCzg==&amp;page=product&amp;pid=7768"
-                                   class="exposure">
-                                    <div class="goods-img-box">
-                                        <img class="lazy"
-                                             src="//cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/850d316b25648c9862c7c22aefba9280.jpg?thumb=1&amp;w=360&amp;h=360"
-                                             lazy="loaded">
-                                    </div>
-                                    <div class="goods-info">
-                                        <div class="goods-name no-wrap">红米Note 5</div>
-                                        <div class="goods-price price">1399<!----></div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="goods-item">
-                                <a data-log_code="recom_product_12-3#eid=24:0:0:0:0:0:0:0:0:0&amp;tid=DetailRec-78cpaAwFqwUTL0eVFuqCzg==&amp;page=product&amp;pid=6701"
-                                   class="exposure">
-                                    <div class="goods-img-box">
-                                        <img class="lazy"
-                                             src="//cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/d68da7f79cc9800a34b1b48e1a439e44.jpg?thumb=1&amp;w=360&amp;h=360"
-                                             lazy="loaded">
-                                    </div>
-                                    <div class="goods-info">
-                                        <div class="goods-name no-wrap">小米MIX 2</div>
-                                        <div class="goods-price price">
-                                            2599
-                                            <del class="price">3299</del>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="goods-item">
-                                <a data-log_code="recom_product_12-4#eid=24:0:0:0:0:0:0:0:0:0&amp;tid=DetailRec-78cpaAwFqwUTL0eVFuqCzg==&amp;page=product&amp;pid=7909"
-                                   class="exposure">
-                                    <div class="goods-img-box">
-                                        <img class="lazy"
-                                             src="//cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/e54e6d531611a372e1509c1f1e85c9b3.jpg?thumb=1&amp;w=360&amp;h=360"
-                                             lazy="loaded">
-                                    </div>
-                                    <div class="goods-info">
-                                        <div class="goods-name no-wrap">小米6X 标准高透贴膜</div>
-                                        <div class="goods-price price">19<!----></div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="goods-item">
-                                <a data-log_code="recom_product_12-5#eid=24:0:0:0:0:0:0:0:0:0&amp;tid=DetailRec-78cpaAwFqwUTL0eVFuqCzg==&amp;page=product&amp;pid=7910"
-                                   class="exposure">
-                                    <div class="goods-img-box">
-                                        <img class="lazy"
-                                             src="//cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/6156db2b5b3b270e87e8bcbe140cabc2.jpg?thumb=1&amp;w=360&amp;h=360"
-                                             lazy="loaded">
-                                    </div>
-                                    <div class="goods-info">
-                                        <div class="goods-name no-wrap">小米6X保护壳</div>
-                                        <div class="goods-price price">29<!----></div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="goods-item">
-                                <a data-log_code="recom_product_12-6#eid=24:0:0:0:0:0:0:0:0:0&amp;tid=DetailRec-78cpaAwFqwUTL0eVFuqCzg==&amp;page=product&amp;pid=4917"
-                                   class="exposure">
-                                    <div class="goods-img-box">
-                                        <img class="lazy"
-                                             src="//cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/570c5d0701fd7a4a56688654ad4f1133.jpg?thumb=1&amp;w=360&amp;h=360"
-                                             lazy="loaded">
-                                    </div>
-                                    <div class="goods-info">
-                                        <div class="goods-name no-wrap">最生活毛巾</div>
-                                        <div class="goods-price price">19.9<!----></div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="goods-item">
-                                <a data-log_code="recom_product_12-7#eid=24:0:0:0:0:0:0:0:0:0&amp;tid=DetailRec-78cpaAwFqwUTL0eVFuqCzg==&amp;page=product&amp;pid=5059"
-                                   class="exposure">
-                                    <div class="goods-img-box">
-                                        <img class="lazy"
-                                             src="//cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/359594c6feed269a51eec5d0e59e42b1.jpg?thumb=1&amp;w=360&amp;h=360"
-                                             lazy="loaded">
-                                    </div>
-                                    <div class="goods-info">
-                                        <div class="goods-name no-wrap">活塞耳机</div>
-                                        <div class="goods-price price">29<!----></div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="goods-item">
-                                <a data-log_code="recom_product_12-8#eid=24:0:0:0:0:0:0:0:0:0&amp;tid=DetailRec-78cpaAwFqwUTL0eVFuqCzg==&amp;page=product&amp;pid=7244"
-                                   class="exposure">
-                                    <div class="goods-img-box">
-                                        <img class="lazy"
-                                             src="//cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/806866db7cfac7efdb561e9d796b4a33.jpg?thumb=1&amp;w=360&amp;h=360"
-                                             lazy="loaded">
-                                    </div>
-                                    <div class="goods-info">
-                                        <div class="goods-name no-wrap">米兔指尖积木</div>
-                                        <div class="goods-price price">9.9<!----></div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="goods-item">
-                                <a data-log_code="recom_product_12-9#eid=24:0:0:0:0:0:0:0:0:0&amp;tid=DetailRec-78cpaAwFqwUTL0eVFuqCzg==&amp;page=product&amp;pid=7092"
-                                   class="exposure">
-                                    <div class="goods-img-box">
-                                        <img class="lazy"
-                                             src="//i8.mifile.cn/v1/a1/2f258afa-bf3c-e02f-54ce-e490a922ffae!360x360.webp"
-                                             lazy="loaded">
-                                    </div>
-                                    <div class="goods-info">
-                                        <div class="goods-name no-wrap">USB充电器</div>
-                                        <div class="goods-price price">29.9<!----></div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="goods-item">
-                                <a data-log_code="recom_product_12-10#eid=24:0:0:0:0:0:0:0:0:0&amp;tid=DetailRec-78cpaAwFqwUTL0eVFuqCzg==&amp;page=product&amp;pid=6825"
-                                   class="exposure">
-                                    <div class="goods-img-box">
-                                        <img class="lazy"
-                                             src="//i8.mifile.cn/v1/a1/b9964239-82d5-7564-7a73-a117008157fb!360x360.webp"
-                                             lazy="loaded">
-                                    </div>
-                                    <div class="goods-info">
-                                        <div class="goods-name no-wrap">Type C数据线</div>
-                                        <div class="goods-price price">16.9<!----></div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="goods-item">
-                                <a data-log_code="recom_product_12-11#eid=24:0:0:0:0:0:0:0:0:0&amp;tid=DetailRec-78cpaAwFqwUTL0eVFuqCzg==&amp;page=product&amp;pid=7463"
-                                   class="exposure">
-                                    <div class="goods-img-box">
-                                        <img class="lazy"
-                                             src="//cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/d75a2f3b510b1f003f9eef17e757fc7f.jpg?thumb=1&amp;w=360&amp;h=360"
-                                             lazy="loaded">
-                                    </div>
-                                    <div class="goods-info">
-                                        <div class="goods-name no-wrap">新小米移动电源2 (10000mAh)</div>
-                                        <div class="goods-price price">79</div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+
+
+                    <MiRecommand/>
+
+
                 </div>
-                <div class="ui-mask" style="display:none;"></div>
-                <div class="pop" style="display:none;">
-                    <div class="close">
-                        <i class="iconfont icon-close"></i>
+
+
+                <div class="ui-mask" v-show="showMask"></div>
+                <div class="pop" v-show="showSKU">
+                    <div class="close" @click="showSKU=false,showMask=false">
+                        <i class="iconfont icon-close" ></i>
                     </div>
                     <div class="pro-info layout row align-center justify-space-around">
                         <div class="product-img">
-                            <img src="//i8.mifile.cn/a1/pms_1524621089.05828574!720x7200.jpg">
+                            <img :src="selectedGood&&selectedGood.img_url">
                         </div>
                         <div class="product-desc flex layout column justify-start">
                             <div class="cur-price">
-                                <div class="price">1599</div>
+                                <div class="price">{{selectedGood&&selectedGood.price}}</div>
                             </div>
-                            <div class="name">小米6X 4GB+64GB 曜石黑</div>
+                            <div class="name">{{selectedGood&&selectedGood.name}}</div>
                         </div>
                     </div>
+
+
                     <div class="max5">
-                        <div class="border-top-1px mt2x">
+                        <div
+                                v-for="option in buyOption"
+                                :key="option.prop_cfg_id"
+                                :class="{'sdk_color':!option.hasPrice}"
+                                class="border-top-1px mt2x">
                             <div class="option-title pt32">
-                                版本
-                                <span style="display: none;">请选择： 版本</span>
+                                {{option.name}}
+                                <span style="display: none;">请选择： {{option.name}}</span>
                             </div>
                             <div class="options-group align-center justify-start layout wrap">
-                                <div class="option-item border-1px align-center justify-center ui-flex on line justify-space-between">
-                                    <p>4GB+64GB</p>
-                                    <p>1599元</p>
-                                </div>
-                                <div class="option-item border-1px align-center justify-center ui-flex line justify-space-between">
-                                    <p>4GB+32GB</p>
-                                    <p>1399元</p>
-                                </div>
-                                <div class="option-item border-1px align-center justify-center ui-flex cos line justify-space-between">
-                                    <p>6GB+64GB</p>
-                                    <p>1799元</p>
-                                </div>
-                                <div class="option-item border-1px align-center justify-center ui-flex line justify-space-between">
-                                    <p>6GB+128GB</p>
-                                    <p>1999元</p>
+                                <div
+                                        v-for="(item,index) in option.list"
+                                        :key="item.prop_value_id"
+                                        :class="{'on':item.isOn,'line':option.hasPrice,'justify-space-between':option.hasPrice}"
+                                        @click="chooseItem(option,index)"
+                                        class="option-item border-1px align-center justify-center ui-flex">
+                                    <p>{{item.name}}</p>
+                                    <p v-show="option.hasPrice">{{item.price}}</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="border-top-1px mt2x sdk_color">
-                            <div class="option-title pt32">
-                                颜色
-                                <span style="display: none;">请选择： 颜色</span>
-                            </div>
-                            <div class="options-group align-center justify-start layout wrap">
-                                <div class="option-item border-1px align-center justify-center ui-flex">
-                                    <p>流沙金</p>
-                                </div>
-                                <div class="option-item border-1px align-center justify-center ui-flex on">
-                                    <p>曜石黑</p>
-                                </div>
-                                <div class="option-item border-1px align-center justify-center ui-flex">
-                                    <p>赤焰红</p>
-                                </div>
-                                <div class="option-item border-1px align-center justify-center ui-flex">
-                                    <p>冰川蓝</p>
-                                </div>
-                                <div class="option-item border-1px align-center justify-center ui-flex">
-                                    <p>樱花粉</p>
-                                </div>
-                            </div>
-                        </div>
+
                         <div class="border-top-1px pd32 layout align-center justify-space-between">
                             <div class="option-title">购买数量</div>
                             <div class="xm-input-number">
@@ -430,9 +239,11 @@
                             </div>
                         </div>
                     </div>
+
+
                     <div class="btn-bottom">
-                        <div class="action-box flex">
-                            <a data-log_code="" class="btn buy-btn">加入购物车</a>
+                        <div class="action-box flex" >
+                            <a data-log_code="" class="btn buy-btn" >加入购物车</a>
                         </div>
                     </div>
                 </div>
@@ -446,7 +257,7 @@
                             <i class="iconfont icon-cart"></i>
                             <span>购物车</span>
                         </a>
-                        <div class="action-box flex">
+                        <div class="action-box flex" @click="addToCart">
                             <a class="btn buy-btn">加入购物车</a>
                         </div>
                     </div>
@@ -485,9 +296,12 @@
     import fetch from '@/api/fetch'
 
     import Component from 'vue-class-component'
+    import MiRecommand from "@/components/MiRecommend.vue"
 
     import Comment from "@/components/Comment.vue";
     import DOMPurify from "dompurify";
+
+    import {default_goods_id, buy_option,goods_info} from "@/mock/sku.js"
 
     Component.registerHooks([
         'beforeRouteEnter',
@@ -495,7 +309,7 @@
         'beforeRouteLeave'
     ])
 
-    @Component({components: {Comment}})
+    @Component({components: {Comment, MiRecommand}})
     export default class MailDetail extends Vue {
         productData = null
         galleryView = null
@@ -505,10 +319,36 @@
         commentView = null
         descTabsView = null
         descTabsViewIndex = 0
+        showMask=false
+        showSKU=false
+        buyOption=null
+        goodsInfo=null
+        selectedSKU=[]
+        selectedGood=null
 
         destroyed() {
             this.detailSwiper && this.detailSwiper.removeAllSlides()
             this.$NProgress.remove()
+        }
+
+        chooseItem(option:object,index:number){
+            option.list.forEach((item:any,i:number)=>{
+                item.isOn=i==index
+            })
+
+            let curSKUIndex=this.selectedSKU.findIndex((item:any)=>{
+                return item.prop_cfg_id==option.prop_cfg_id
+            })
+            this.selectedSKU[curSKUIndex].prop_value_id=option.list[index].prop_value_id
+
+            this.selectedGood=this.goodsInfo.find((item:any)=>{
+                return JSON.stringify(item.prop_list)===JSON.stringify(this.selectedSKU)
+            })
+        }
+
+        addToCart(){
+            this.showMask=true
+            this.showSKU=true
         }
 
         beforeRouteEnter(to: any, from: any, next: any) {
@@ -556,6 +396,50 @@
             this.titleView = res.data.view_content.titleView.titleView
             this.canJoinActs = res.data.view_content.titleView.titleView.canJoinActs[0]
             this.commentView = res.data.view_content.commentView.commentView
+
+            this.goodsInfo=goods_info
+            this.selectedGood=this.goodsInfo.find((item:any)=>{
+                return item.goods_id==default_goods_id
+            })
+
+            let buyOption=buy_option
+            buy_option.forEach((item:any)=>{
+                item.list.forEach((list:any)=>{
+                    list.isOn=false
+                })
+                item.hasPrice=!!item.list[0].price
+            })
+
+            this.selectedGood&&this.selectedGood.prop_list.forEach((item:any)=>{
+                /*
+                // 选中产品信息如下
+                {
+                    // 版本（185）为4GB+64GB（618）
+                    "prop_cfg_id": 185,
+                    "prop_value_id": 618
+                },
+                {
+                    // 颜色（186）为曜石黑（623）
+                    "prop_cfg_id": 186,
+                    "prop_value_id": 623
+                }
+                */
+
+                let curOption=buyOption.find((option:any)=>{
+                    return option.prop_cfg_id==item.prop_cfg_id
+                })
+                let curIndex=curOption.list.findIndex((list:any)=>{
+                    return list.prop_value_id==item.prop_value_id
+                })
+                curOption.list[curIndex].isOn=true
+            })
+
+            this.selectedSKU=JSON.parse(JSON.stringify(this.selectedGood.prop_list))
+
+            this.buyOption=buyOption
+
+            //console.log(this.selectedGood);
+
 
             this.$store.commit('setViewLoading', false)
             this.$NProgress.done()

@@ -410,3 +410,7 @@ export default class MailDetail extends Vue {
 > data 中的声明的每个属性，都拥有一个数组（依赖收集器 subs），保存着 谁依赖（使用）了它。当页面使用到某个属性时，页面的 watcher 就会被放到对应属性的依赖收集器 subs 中。该过程称为依赖收集。
 3. Vue 在内存数据变化后，如何通知视图数据更新？
 > 比如当 name 改变（触发 set,被Vue 发现）的时候，name 会遍历自己的依赖收集器 subs，逐个通知 watcher，让 watcher 完成更新。该过程称为依赖更新。
+
+
+#### sku
+> sku 的数据不来自 rap2，而是直接用mock
