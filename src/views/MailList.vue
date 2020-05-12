@@ -47,7 +47,7 @@
     import {Prop, Watch} from "vue-property-decorator";
     import fetch from '@/api/fetch'
     import Title from "@/components/Title.vue"
-    import MiRecommand from "@/components/MiRecommend.vue"
+    import MiRecommand from "@/components/MailRecommend.vue"
 
     import DOMPurify from 'dompurify';
 

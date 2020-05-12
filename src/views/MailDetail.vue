@@ -147,7 +147,7 @@
                     </div>
 
 
-                    <MiRecommand/>
+                    <MailRecommend/>
 
 
                 </div>
@@ -297,7 +297,7 @@
     import fetch from '@/api/fetch'
 
     import Component from 'vue-class-component'
-    import MiRecommand from "@/components/MiRecommend.vue"
+    import MailRecommend from "@/components/MailRecommend.vue"
 
     import Comment from "@/components/Comment.vue";
     import DOMPurify from "dompurify";
@@ -310,7 +310,7 @@
         'beforeRouteLeave'
     ])
 
-    @Component({components: {Comment, MiRecommand}})
+    @Component({components: {Comment, MailRecommend}})
     export default class MailDetail extends Vue {
         productData = null
         galleryView = null

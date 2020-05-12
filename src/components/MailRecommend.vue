@@ -34,7 +34,7 @@
     ])
 
     @Component({components: {}})
-    export default class MiRecommend extends Vue {
+    export default class MailRecommend extends Vue {
 
         productList=[];
 
