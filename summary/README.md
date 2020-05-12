@@ -414,3 +414,25 @@ export default class MailDetail extends Vue {
 
 #### sku
 > sku 的数据不来自 rap2，而是直接用mock
+
+
+#### 【vue】 transition 的使用
+* 单向（page-left，点击两次，两个相同的过程）
+```
+.page-left-enter-active, .page-left-leave-active {
+    transition: all .5s;
+}
+.page-left-enter {
+    transform: translateX(100%);
+}
+```
+* 双向（sku 弹窗，点击两次，两个不同的过程）
+```
+.sku-enter-active, .sku-leave-active{
+    transition: transform 5s;
+}
+
+.sku-enter, .sku-leave-to{
+    transform: translateY(100%);
+}
+```
