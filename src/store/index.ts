@@ -8,6 +8,7 @@ export default new Vuex.Store({
   state: {
     // UI数据
     viewLoading: false, // ViewLoading 为复用数据，每次跳转到新路由前都会被置为 true
+    transitionName:'page-left', //
     // 用户数据
     userInfo:null
   },
@@ -19,6 +20,9 @@ export default new Vuex.Store({
   mutations: {
     setViewLoading (state, isLoading) {
       state.viewLoading = isLoading
+    },
+    setTransitionName (state,transitionName){
+      state.transitionName = transitionName
     },
     setUserInfo (state, info) {
       state.userInfo = info

@@ -436,3 +436,35 @@ export default class MailDetail extends Vue {
     transform: translateY(100%);
 }
 ```
+
+#### vuex
+* mapState
+> 将 store 的 state 映射至组件
+* mapMutations
+> 将 store 的 mutations 映射至组件
+```
+<transition-group class="page-wrap" tag="div" :name="transitionName">
+    ...
+</transition-group>
+
+@Component({
+
+    computed: {...mapState(['viewLoading','transitionName'])},
+    methods: {...mapMutations(['setTransitionName'])},
+
+})
+export default class App extends Vue {
+
+    setTransitionName!:(name:string)=>void
+
+    @Watch('$route')
+    onRouteChanged(to: any, from: any) {
+        if (!from.name) {
+            this.setTransitionName('')
+        }
+        if (to.meta.index && from.meta.index) {
+            this.setTransitionName(to.meta.index < from.meta.index ? 'page-right' : 'page-left')
+        }
+    }
+}
+```

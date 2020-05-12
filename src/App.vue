@@ -9,27 +9,28 @@
 <script lang="ts">
     import Vue from 'vue'
     import {Component, Watch} from "vue-property-decorator";
-    import {mapGetters, mapState} from "vuex";
+    import {mapGetters, mapMutations, mapState} from "vuex";
     import Skeleton from '@/components/Skeleton.vue'
+    import store from "@/store";
 
     @Component({
         components: {Skeleton},
-        computed: {...mapState(['viewLoading'])},
+
+        computed: {...mapState(['viewLoading','transitionName'])},
+        methods: {...mapMutations(['setTransitionName'])},
+
     })
     export default class App extends Vue {
-        // 路由切换时的动画过渡方向。比如"首页"->"分类"，则 transitionName='page-left'
-        transitionName = 'page-left'
 
-        // 监视路由变化
+        setTransitionName!:(name:string)=>void
+
         @Watch('$route')
         onRouteChanged(to: any, from: any) {
-            // 刷新时不需要过渡
             if (!from.name) {
-                this.transitionName = ''
-                return
+                this.setTransitionName('')
             }
             if (to.meta.index && from.meta.index) {
-                this.transitionName = to.meta.index < from.meta.index ? 'page-right' : 'page-left'
+                this.setTransitionName(to.meta.index < from.meta.index ? 'page-right' : 'page-left')
             }
         }
     }

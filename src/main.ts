@@ -24,6 +24,7 @@ Vue.prototype.$NProgress = NProgress
 
 // 在每次切换路由或刷新页面之前，将 ViewLoading 重置为 true，并显示进度条
 router.beforeEach((to, from, next) => {
+
   store.commit('setViewLoading', true)
   NProgress.start()
   // if (to.meta.requiresAuth && !store.getters.isLogin) {
@@ -34,6 +35,7 @@ router.beforeEach((to, from, next) => {
   // } else {
   //   next()
   // }
+
   next()
 })
 
