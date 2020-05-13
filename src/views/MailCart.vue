@@ -45,13 +45,16 @@
                                         </div>
                                         <div class="num">
                                             <div class="xm-input-number">
-                                                <div class="input-sub" :class="{'active':item.type!='gift'&&item.num>1}" @click="cartEdit(item,-1)">
+                                                <div class="input-sub" :class="{'active':item.type!='gift'&&item.num>1}"
+                                                     @click="cartEdit(item,-1)">
                                                     <i class="iconfont icon-move"></i>
                                                 </div>
                                                 <div class="input-num">
                                                     <span>{{item.num}}</span>
                                                 </div>
-                                                <div class="input-add" :class="{'active':item.type!='gift'&&item.num<item.buy_limit}" @click="cartEdit(item,1)">
+                                                <div class="input-add"
+                                                     :class="{'active':item.type!='gift'&&item.num<item.buy_limit}"
+                                                     @click="cartEdit(item,1)">
                                                     <i class="iconfont icon-add"></i>
                                                 </div>
                                             </div>
@@ -205,16 +208,33 @@
             }
         }
 
-        cartEdit(good:object,payload:number){
+        updateRelativeAmount(good:object) {
+            // 处理商品对应的 gift 和 service 的数量
+            // 商品增加，则对应选中的 gift 增加，对应选中的 service 数量上限增加
+            this.cartList.forEach((item: object) => {
 
-            if(good.num==1&&payload==-1) return
-            if(good.num==good.buy_limit&&payload==1) return
-            let consumption=payload?2:1
+                // 是商品对应 gift 或 service
+                if (item.parent_goodsId && item.parent_goodsId == good.goodsId) {
+                    item.buy_limit = good.num
+                    if (item.type == 'gift') {
+                        item.num = good.num
+                    }
+
+                }
+            })
+        }
+
+        cartEdit(good: object, payload: number) {
+
+            if (good.num == 1 && payload == -1) return
+            if (good.num == good.buy_limit && payload == 1) return
+            let consumption = payload ? 2 : 1
             this.$fetch('cartEdit', {
-                'goodsId':good.goodsId,
+                'goodsId': good.goodsId,
                 consumption
             }).then(res => {
-                good.num+=payload
+                good.num += payload
+                this.updateRelativeAmount(good)
             })
         }
 
@@ -296,7 +316,7 @@
                     sel_status: 1,
                     product_name: gift.product_name,
                     num: cartList[index].num,
-                    parent_goodsId: Id?Id:gift.parent_goodsId,
+                    parent_goodsId: Id ? Id : gift.parent_goodsId,
                     type: 'gift'
                 })
 
