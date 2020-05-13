@@ -205,7 +205,7 @@
             }
         }
 
-        initialServiceSelected(items:any){
+        initialServiceSelected(items: any) {
             // 所有被选中的服务集合
             let serviceSelected = []
             items.forEach((item: any) => {
@@ -226,7 +226,7 @@
             return serviceSelected
         }
 
-        addServiceToCartList(serviceSelected:any,items:any){
+        addServiceToCartList(serviceSelected: any, items: any) {
             // 将被选中的服务添加到商品列表中，注意页面上被选中服务总位于对应商品下方，所以需要 parent_goodsId
             serviceSelected.forEach((info: any) => {
                 let index = items.findIndex((item: any) => {
@@ -249,7 +249,7 @@
             })
         }
 
-        initialGiftSelected(items:any){
+        initialGiftSelected(items: any) {
             // 同理，gift 也作为商品放入商品列表中
             let giftSelected = []
             items.forEach((item: any, index: number) => {
@@ -263,24 +263,31 @@
             return giftSelected
         }
 
-        addGiftToCartList(giftSelected:any,items:any) {
-            giftSelected.forEach((gift: any) => {
-                let index = items.findIndex((item: any) => {
-                    return item.goodsId == gift.parent_goodsId
+        // 传入 Id 说明是 check 函数调用，否则就是 setList 函数调用
+        addGiftToCartList(gifts: any, cartList: any, Id?: string) {
+            gifts.forEach((gift: any) => {
+                let index = cartList.findIndex((item: any) => {
+
+                    if (Id) {
+                        return item.goodsId == Id
+                    } else {
+                        return item.goodsId == gift.parent_goodsId
+                    }
                 })
 
-                // 将服务添加至对应商品后面
-                items.splice(index + 1, 0, {
+                // 将 gift 添加至对应商品后面
+                cartList.splice(index + 1, 0, {
                     goodsId: gift.actId,
                     image_url: gift.image_url,
-                    buy_limit: items[index].buy_limit,
+                    buy_limit: cartList[index].buy_limit,
                     sel_status: 1,
                     product_name: gift.product_name,
-                    num: items[index].num,
-                    parent_goodsId: gift.parent_goodsId,
+                    num: cartList[index].num,
+                    parent_goodsId: Id?Id:gift.parent_goodsId,
                     type: 'gift'
                 })
 
+                Id && this.giftSelected.push({...gift, parent_goodsId: Id})
             })
         }
 
@@ -293,11 +300,11 @@
         setList(res: any) {
             let items = cartIndex.data.items
 
-            let serviceSelected=this.initialServiceSelected(items)
-            this.addServiceToCartList(serviceSelected,items)
+            let serviceSelected = this.initialServiceSelected(items)
+            this.addServiceToCartList(serviceSelected, items)
 
-            let giftSelected =this.initialGiftSelected(items)
-            this.addGiftToCartList(giftSelected,items)
+            let giftSelected = this.initialGiftSelected(items)
+            this.addGiftToCartList(giftSelected, items)
 
             this.serviceSelected = serviceSelected
             this.giftSelected = giftSelected
@@ -305,6 +312,64 @@
 
             this.$store.commit('setViewLoading', false)
             this.$NProgress.done()
+        }
+
+        dealServiceSelected(good: object) {
+            this.serviceSelected.forEach((service: any, serviceIndex: any) => {
+                // 找到该商品对应的已选中服务
+                if (service.parent_goodsId == good.goodsId) {
+                    let goodIndex = this.cartList.findIndex((item: any) => {
+                        return item.goodsId == service.service_goods_id
+                    })
+                    // 从商品列表中剔除该商品对应的已选中服务
+                    this.cartList.splice(goodIndex, 1)
+                    // 将 service 放入该商品对应 serveiceList 中，以表示该服务由已选变为未选
+                    good.serviceList.push(service)
+                    // 从 serviceSelected 中剔除 service
+                    this.serviceSelected.splice(serviceIndex, 1)
+                }
+            })
+        }
+
+        dealGift(good: object) {
+            this.giftSelected.forEach((gift: any, giftIndex: number) => {
+                // 找到该商品对应的 gift
+                if (gift.parent_goodsId == good.goodsId) {
+                    let goodIndex = this.cartList.findIndex((item: any) => {
+                        return item.goodsId == gift.actId
+                    })
+                    // 从商品列表中剔除该商品对应的 gift
+                    this.cartList.splice(goodIndex, 1)
+                    // 从 giftSelected 中剔除 gift
+                    this.giftSelected.splice(giftIndex, 1)
+                }
+            })
+        }
+
+        uncheck(good: object) {
+            good.sel_status = 0
+
+            this.$fetch('cartSelect', {
+                'goodsId': good.goodsId,
+                'sel_status': good.sel_status
+            }).then(res => {
+                this.dealServiceSelected(good)
+                this.dealGift(good)
+            })
+        }
+
+        check(good: object) {
+            good.sel_status = 1
+
+            this.$fetch('cartSelect', {
+                'goodsId': good.goodsId,
+                'sel_status': good.sel_status
+            }).then(res => {
+                // 将该商品的 gift 转化为商品
+                if (!good.gift) return;
+
+                this.addGiftToCartList(good.gift, this.cartList, good.goodsId)
+            })
         }
 
         /***
@@ -315,73 +380,9 @@
         chooseGood(good: object) {
             // 取消选中
             if (good.sel_status == 1) {
-
-                good.sel_status = 0
-
-                this.$fetch('cartSelect', {
-                    'goodsId': good.goodsId,
-                    'sel_status': good.sel_status
-                }).then(res => {
-                    this.serviceSelected.forEach((service: any, serviceIndex: any) => {
-                        // 找到该商品对应的已选中服务
-                        if (service.parent_goodsId == good.goodsId) {
-                            let goodIndex = this.cartList.findIndex((item: any) => {
-                                return item.goodsId == service.service_goods_id
-                            })
-                            // 从商品列表中剔除该商品对应的已选中服务
-                            this.cartList.splice(goodIndex, 1)
-                            // 将 service 放入该商品对应 serveiceList 中，以表示该服务由已选变为未选
-                            good.serviceList.push(service)
-                            // 从 serviceSelected 中剔除 service
-                            this.serviceSelected.splice(serviceIndex, 1)
-                        }
-                    })
-
-                    // 处理 gift
-                    this.giftSelected.forEach((gift: any, giftIndex: number) => {
-                        // 找到该商品对应的 gift
-                        if (gift.parent_goodsId == good.goodsId) {
-                            let goodIndex = this.cartList.findIndex((item: any) => {
-                                return item.goodsId == gift.actId
-                            })
-                            // 从商品列表中剔除该商品对应的 gift
-                            this.cartList.splice(goodIndex, 1)
-                            // 从 giftSelected 中剔除 gift
-                            this.giftSelected.splice(giftIndex, 1)
-                        }
-                    })
-                })
+                this.uncheck(good)
             } else {
-                good.sel_status = 1
-
-                this.$fetch('cartSelect', {
-                    'goodsId': good.goodsId,
-                    'sel_status': good.sel_status
-                }).then(res => {
-                    // 将该商品的 gift 转化为商品
-                    if (!good.gift) return;
-                    good.gift.forEach((gift: any) => {
-
-                        let index = this.cartList.findIndex((item: any) => {
-                            return item.goodsId == good.goodsId
-                        })
-
-                        // 将 gift 添加至对应商品后面
-                        this.cartList.splice(index + 1, 0, {
-                            goodsId: gift.actId,
-                            image_url: gift.image_url,
-                            buy_limit: this.cartList[index].buy_limit,
-                            sel_status: 1,
-                            product_name: gift.product_name,
-                            num: this.cartList[index].num,
-                            parent_goodsId: gift.parent_goodsId,
-                            type: 'gift'
-                        })
-
-                        // 将 gift 放入 this.giftSelected
-                        this.giftSelected.push({...gift, parent_goodsId: good.goodsId})
-                    })
-                })
+                this.check(good)
             }
         }
     }
