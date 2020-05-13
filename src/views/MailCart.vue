@@ -74,7 +74,7 @@
                                             <div class="i2">
                                                 <span> {{service.service_short_name}} {{service.service_price}}元</span>
                                             </div>
-                                            <div class="i3">
+                                            <div class="i3" @click="onCartSelService(item)">
                                                 <span>选购</span>
                                             </div>
                                         </div>
@@ -113,50 +113,32 @@
                     <a class="btn flex">去结算</a>
                 </div>
                 <div class="insurance-pop">
-                    <div class="ui-mask" style="display:none;"></div>
-                    <div class="pop" style="display:none;">
+                    <div class="ui-mask" v-if="showServiceInfo"></div>
+                    <div class="pop" v-if="showServiceInfo">
                         <div class="close">
-                            <i class="image-icons iconfont icon-close"></i>
+                            <i class="image-icons iconfont icon-close" @click="showServiceInfo=false"></i>
                         </div>
                         <div class="h1">购买服务</div>
                         <div class="max5">
-                            <div class="border-top-1px mt2x">
-                                <div class="option-title pt32">
-                                    会员服务
+                            <div
+                                    v-for="service_type in current_service_types"
+                                    class="border-top-1px mt2x">
+                                <div
+                                        v-if="service_type.list.length"
+                                        class="option-title pt32">
+                                    {{service_type.name}}
                                     <a href="//cdn.cnbj0.fds.api.mi-img.com/b2c-data-mishop/72d5bc482304.html"
                                        class="service-url">
                                         <!-- <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MjhFNUZBNEJBNjg2MTFFN0JGODNEMTFGMzE1NTJDREYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MjhFNUZBNENBNjg2MTFFN0JGODNEMTFGMzE1NTJDREYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpGNEE0ODY5NEE2NzUxMUU3QkY4M0QxMUYzMTU1MkNERiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDoyOEU1RkE0QUE2ODYxMUU3QkY4M0QxMUYzMTU1MkNERiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PqoKySAAAALWSURBVHjatJfPS1RRFMef9002Q9BiRlPIzE2TusgWQZQFFS364aJwUZBEYW3atAv6S1y0K3chSEUbqQaSQoqKirJGwppxMaZvIaSTaPo98L1xebxf900d+KDMu/d+7zn33PPOa3KSmQuKYA/YBQogy2d1sAgqoAy+gvW4BZtinufAEXAIzINpMAsWwIoxpgV0gW7QBl6ASWOMlfB+MEAPnoGfCaMjmzjBCD0C7xLOcxQ4D24xrGlN5t7mWirOYxkwBJrBPfDbacy2gcvgFxgFf8KEz4F2cCckQeQ8DzLJJMHyoAo8JtZUSGIOM0fGzR+19YHDFA3ytAPcBL0UzfH37UyoXibYZ7BmzNsAH8EZel4zhWWRq+AuM9Zv4tkNjpNMnQAl8IZCeW6gwCiWffPXed0ugFeyMS18nLt5GXJWQ/RKbAS8Z3g9eiAh7qF4F6/Smm+NJa6xA3xT9Fru6ZMQ0TzP1KFANWTclO9YguwptVzF+zbP6uNELOqFJI82z7fZIFukVjFD4emYBccSXJ2dxv9zEeNEa6/ihO8N3tcO5onDxKpGjP0hmuJxq0U5DLJ9YJAZX2WhiDIJdUuGb5l6StFBFhTt6WjUi4Emz7OZBjw9Zog+5r1ObIreZi1Fc8aZ2orK3LpipWpNkUy6ZJYs54rWgmJC7E4Z7nKKOaI15zLcB8Bri8mSIDOs00uWwqekxit2GG0s8DbCcfc1yAqs1V9cvraaWeQ/WZyx3qxnITzASM3olmSSjVrSVuc0uE5sWqFuav3thSR0D8Altiv/2raCi+ChLjBmB1Jjh9gP3vIIwmwL29wy/8b15FfYCJSSNHvSjaz+r2bP9Q0ULz+ATvZIlRTXxTzTa3zz3TdFg4S1uLwzl9kjtfMYli0a+rPgpFFON9J8whxlu1JjwZhlJ2F+whTYa/Xwmknv9jztJ0zQR1uRIcwbtXqFd7nCYpToo21TgAEAWy6shL93DD4AAAAASUVORK5CYII="> -->
                                         <i class="iconfont icon-question"></i>
                                     </a>
                                 </div>
-                                <div class="options-group">
+                                <div
+                                        v-for="option in service_type.list"
+                                        class="options-group">
                                     <div class="align-center justify-start layout wrap">
                                         <div class="option-item border-1px align-center justify-center ui-flex">
-                                            <p>影视会员年卡 299元</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="border-top-1px mt2x">
-                                <div class="option-title pt32">
-                                    安装服务
-                                    <a href="//cdn.cnbj0.fds.api.mi-img.com/b2c-data-mishop/a739137749cc.html"
-                                       class="service-url">
-                                        <!-- <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MjhFNUZBNEJBNjg2MTFFN0JGODNEMTFGMzE1NTJDREYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MjhFNUZBNENBNjg2MTFFN0JGODNEMTFGMzE1NTJDREYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpGNEE0ODY5NEE2NzUxMUU3QkY4M0QxMUYzMTU1MkNERiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDoyOEU1RkE0QUE2ODYxMUU3QkY4M0QxMUYzMTU1MkNERiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PqoKySAAAALWSURBVHjatJfPS1RRFMef9002Q9BiRlPIzE2TusgWQZQFFS364aJwUZBEYW3atAv6S1y0K3chSEUbqQaSQoqKirJGwppxMaZvIaSTaPo98L1xebxf900d+KDMu/d+7zn33PPOa3KSmQuKYA/YBQogy2d1sAgqoAy+gvW4BZtinufAEXAIzINpMAsWwIoxpgV0gW7QBl6ASWOMlfB+MEAPnoGfCaMjmzjBCD0C7xLOcxQ4D24xrGlN5t7mWirOYxkwBJrBPfDbacy2gcvgFxgFf8KEz4F2cCckQeQ8DzLJJMHyoAo8JtZUSGIOM0fGzR+19YHDFA3ytAPcBL0UzfH37UyoXibYZ7BmzNsAH8EZel4zhWWRq+AuM9Zv4tkNjpNMnQAl8IZCeW6gwCiWffPXed0ugFeyMS18nLt5GXJWQ/RKbAS8Z3g9eiAh7qF4F6/Smm+NJa6xA3xT9Fru6ZMQ0TzP1KFANWTclO9YguwptVzF+zbP6uNELOqFJI82z7fZIFukVjFD4emYBccSXJ2dxv9zEeNEa6/ihO8N3tcO5onDxKpGjP0hmuJxq0U5DLJ9YJAZX2WhiDIJdUuGb5l6StFBFhTt6WjUi4Emz7OZBjw9Zog+5r1ObIreZi1Fc8aZ2orK3LpipWpNkUy6ZJYs54rWgmJC7E4Z7nKKOaI15zLcB8Bri8mSIDOs00uWwqekxit2GG0s8DbCcfc1yAqs1V9cvraaWeQ/WZyx3qxnITzASM3olmSSjVrSVuc0uE5sWqFuav3thSR0D8Altiv/2raCi+ChLjBmB1Jjh9gP3vIIwmwL29wy/8b15FfYCJSSNHvSjaz+r2bP9Q0ULz+ATvZIlRTXxTzTa3zz3TdFg4S1uLwzl9kjtfMYli0a+rPgpFFON9J8whxlu1JjwZhlJ2F+whTYa/Xwmknv9jztJ0zQR1uRIcwbtXqFd7nCYpToo21TgAEAWy6shL93DD4AAAAASUVORK5CYII="> -->
-                                        <i class="iconfont icon-question"></i>
-                                    </a>
-                                </div>
-                                <div class="options-group">
-                                    <div class="align-center justify-start layout wrap">
-                                        <div class="option-item on border-1px align-center justify-center ui-flex">
-                                            <p>电视座装服务 80元</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="options-group">
-                                    <div class="align-center justify-start layout wrap">
-                                        <div class="option-item border-1px align-center justify-center ui-flex">
-                                            <p>电视挂装服务 190元</p>
+                                            <p>{{option.service_short_name}} {{option.service_price}}元</p>
                                         </div>
                                     </div>
                                 </div>
@@ -194,7 +176,8 @@
         cartList = []
         serviceSelected = []
         giftSelected = []
-
+        current_service_types=[]
+        showServiceInfo=false
 
         beforeRouteEnter(to: any, from: any, next: any) {
             if (!from.name) {
@@ -208,7 +191,29 @@
             }
         }
 
-        updateRelativeAmount(good:object) {
+        onCartSelService(good:object){
+            let service_types=[]
+
+            // 将 serviceList 按 serviec_type_name 分类
+            good.serviceList.forEach((service:any)=>{
+
+                let index=service_types.map(item=>item.name).indexOf(service.service_type_name)
+
+                if(index==-1){
+                    service_types.push({
+                        name:service.service_type_name,
+                        list:[service]})
+                }else{
+                    service_types[index].list.push(service)
+                }
+            })
+
+            this.current_service_types=service_types
+
+            this.showServiceInfo=true
+        }
+
+        updateRelativeAmount(good: object) {
             // 处理商品对应的 gift 和 service 的数量
             // 商品增加，则对应选中的 gift 增加，对应选中的 service 数量上限增加
             this.cartList.forEach((item: object) => {
@@ -248,9 +253,9 @@
                     item.service_info.forEach((list: any) => {
                         list.service_info.forEach((info: any) => {
                             if (info.sel_status) {
-                                serviceSelected.push({...info, parent_goodsId: item.goodsId})
+                                serviceSelected.push({...info, parent_goodsId: item.goodsId,service_type_name:list.type_name})
                             } else {
-                                item.serviceList.push(info)
+                                item.serviceList.push({...info,service_type_name:list.type_name})
                             }
                         })
                     })
@@ -357,7 +362,7 @@
                     // 从商品列表中剔除该商品对应的已选中服务
                     this.cartList.splice(goodIndex, 1)
                     // 将 service 放入该商品对应 serveiceList 中，以表示该服务由已选变为未选
-                    good.serviceList.push(service)
+                    good.serviceList.push({...service,service_type_name:service.service_type_name})
                     // 从 serviceSelected 中剔除 service
                     this.serviceSelected.splice(serviceIndex, 1)
                 }
