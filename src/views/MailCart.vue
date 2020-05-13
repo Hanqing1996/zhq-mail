@@ -18,7 +18,7 @@
                                     class="item">
                                 <div class="ui-flex align-center justify-center">
                                     <div
-                                            @click="chooseGood(item)"
+                                            @click="cartSelect(item)"
                                             :class="{'checked':item.sel_status==1}"
                                             class="choose flex">
                                         <i class="iconfont"
@@ -45,13 +45,13 @@
                                         </div>
                                         <div class="num">
                                             <div class="xm-input-number">
-                                                <div class="input-sub">
+                                                <div class="input-sub" :class="{'active':item.type!='gift'&&item.num>1}" @click="cartEdit(item,-1)">
                                                     <i class="iconfont icon-move"></i>
                                                 </div>
                                                 <div class="input-num">
                                                     <span>{{item.num}}</span>
                                                 </div>
-                                                <div class="input-add active">
+                                                <div class="input-add" :class="{'active':item.type!='gift'&&item.num<item.buy_limit}" @click="cartEdit(item,1)">
                                                     <i class="iconfont icon-add"></i>
                                                 </div>
                                             </div>
@@ -199,10 +199,23 @@
                 next((vm: any) => vm.getList())
             } else {
                 // 路由切换
-                fetch('', {}).then(res => {
+                fetch('cartIndex', {}).then(res => {
                     next((vm: any) => vm.setList(res))
                 })
             }
+        }
+
+        cartEdit(good:object,payload:number){
+
+            if(good.num==1&&payload==-1) return
+            if(good.num==good.buy_limit&&payload==1) return
+            let consumption=payload?2:1
+            this.$fetch('cartEdit', {
+                'goodsId':good.goodsId,
+                consumption
+            }).then(res => {
+                good.num+=payload
+            })
         }
 
         initialServiceSelected(items: any) {
@@ -377,7 +390,7 @@
          * 1. 选中商品后，将其 gift 转化为商品。展示其 gift，展示其 serviceList（此时该商品对应所有 service 全部未选中）。
          * 2. 取消选中商品后，将其 gift 从商品列表中剔除。将其 serviceSelected 中对应服务全部放入该商品的 serviceList 中（表示该商品对应服务全部未选中）。
          */
-        chooseGood(good: object) {
+        cartSelect(good: object) {
             // 取消选中
             if (good.sel_status == 1) {
                 this.uncheck(good)
