@@ -205,15 +205,7 @@
             }
         }
 
-
-        getList() {
-            this.$fetch('cartIndex', {}).then(res => {
-                this.setList(res)
-            })
-        }
-
-        setList(res: any) {
-            let items = cartIndex.data.items
+        initialServiceSelected(items:any){
             // 所有被选中的服务集合
             let serviceSelected = []
             items.forEach((item: any) => {
@@ -231,6 +223,10 @@
                     })
                 }
             })
+            return serviceSelected
+        }
+
+        addServiceToCartList(serviceSelected:any,items:any){
             // 将被选中的服务添加到商品列表中，注意页面上被选中服务总位于对应商品下方，所以需要 parent_goodsId
             serviceSelected.forEach((info: any) => {
                 let index = items.findIndex((item: any) => {
@@ -251,7 +247,9 @@
                 })
 
             })
+        }
 
+        initialGiftSelected(items:any){
             // 同理，gift 也作为商品放入商品列表中
             let giftSelected = []
             items.forEach((item: any, index: number) => {
@@ -262,7 +260,10 @@
                     })
                 }
             })
+            return giftSelected
+        }
 
+        addGiftToCartList(giftSelected:any,items:any) {
             giftSelected.forEach((gift: any) => {
                 let index = items.findIndex((item: any) => {
                     return item.goodsId == gift.parent_goodsId
@@ -281,12 +282,27 @@
                 })
 
             })
+        }
 
+        getList() {
+            this.$fetch('cartIndex', {}).then(res => {
+                this.setList(res)
+            })
+        }
+
+        setList(res: any) {
+            let items = cartIndex.data.items
+
+            let serviceSelected=this.initialServiceSelected(items)
+            this.addServiceToCartList(serviceSelected,items)
+
+            let giftSelected =this.initialGiftSelected(items)
+            this.addGiftToCartList(giftSelected,items)
 
             this.serviceSelected = serviceSelected
             this.giftSelected = giftSelected
-
             this.cartList = items
+
             this.$store.commit('setViewLoading', false)
             this.$NProgress.done()
         }
