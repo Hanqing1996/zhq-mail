@@ -205,7 +205,7 @@
                 'service_goods_Id': '2'
             }).then(res => {
                 this.addServiceToCartList(this.checkedServices.list,this.cartList,this.checkedServices.parent_goodsId)
-
+                this.showServiceInfo=false
             })
         }
 
