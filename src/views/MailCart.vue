@@ -191,12 +191,13 @@
             this.servicesInPoP.list.forEach((item: any) => {
                 item.listUnderType.forEach((item2: any) => {
                     if (item2.checked) {
+                        let {service_goods_id, service_image_url, service_short_name, service_price, type_name} = item2
                         servicesCheckedInPoP.push({
-                            service_goods_id: item2.service_goods_id,
-                            service_image_url: item2.service_image_url,
-                            service_short_name: item2.service_short_name,
-                            service_price: item2.service_price,
-                            type_name: item2.type_name,
+                            service_goods_id,
+                            service_image_url,
+                            service_short_name,
+                            service_price,
+                            type_name,
                         })
                     }
                 })
@@ -210,10 +211,9 @@
         }
 
 
-        servicesUnselected_add(good:any){
-
+        servicesUnselected_add(good: any,service:any) {
+            good.servicesUnselected.push(service)
         }
-
 
 
         // 商品（选中或不选中），服务（被选中）可以删除
@@ -229,18 +229,18 @@
                 })
                 this.cartList.splice(goodIndex, 1)
 
-                let serviceIndex=this.servicesSelected.findIndex((item:any)=>{
-                    return item.service_goods_id==good.goodsId
+                let serviceIndex = this.servicesSelected.findIndex((item: any) => {
+                    return item.service_goods_id == good.goodsId
                 })
 
-                let parentGoodIndex=this.cartList.findIndex((item: any) => {
+                let parentGoodIndex = this.cartList.findIndex((item: any) => {
                     return item.goodsId == good.parent_goodsId
                 })
 
 
                 // 向 good.servicesUnselected 插入该服务
-                this.cartList[parentGoodIndex].servicesUnselected.push({
-                    service_goods_id:good.goodsId,
+                this.servicesUnselected_add(this.cartList[parentGoodIndex],{
+                    service_goods_id: good.goodsId,
                     service_image_url: good.image_url,
                     service_short_name: good.product_name,
                     service_price: good.price,
@@ -248,8 +248,7 @@
                 })
 
                 // servicesSelected 删除该服务
-                this.servicesSelected.splice(serviceIndex,1)
-
+                this.servicesSelected.splice(serviceIndex, 1)
 
 
             } else {
@@ -266,7 +265,7 @@
                 this.cartList = this.cartList.filter((item: any) => {
 
                     // 是商品，或者是服务或赠品但不对应该商品 则保留
-                    if (item.type=='good'||(item.parent_goodsId&&item.parent_goodsId!=good.goodsId)) {
+                    if (item.type == 'good' || (item.parent_goodsId && item.parent_goodsId != good.goodsId)) {
                         return true
                     } else {
                         return false
@@ -377,22 +376,28 @@
                     item.servicesUnselected = []
                     item.service_info.forEach((list: any) => {
                         list.service_info.forEach((info: any) => {
+
+                            let {
+                                service_goods_id,
+                                service_image_url,
+                                service_short_name,
+                                service_price
+                            } = info
                             if (info.sel_status) {
                                 servicesSelected.push({
-
-                                    service_goods_id: info.service_goods_id,
-                                    service_image_url: info.service_image_url,
-                                    service_short_name: info.service_short_name,
-                                    service_price: info.service_price,
+                                    service_goods_id,
+                                    service_image_url,
+                                    service_short_name,
+                                    service_price,
                                     type_name: list.type_name,
                                     parent_goodsId: item.goodsId
                                 })
                             } else {
-                                item.servicesUnselected.push({
-                                    service_goods_id: info.service_goods_id,
-                                    service_image_url: info.service_image_url,
-                                    service_short_name: info.service_short_name,
-                                    service_price: info.service_price,
+                                this.servicesUnselected_add(item,{
+                                    service_goods_id,
+                                    service_image_url,
+                                    service_short_name,
+                                    service_price,
                                     type_name: list.type_name,
                                 })
                             }
@@ -428,7 +433,7 @@
                     price: info.service_price,
                     num: 1,
                     type: 'service',
-                    parent_goodsId:items[index].goodsId
+                    parent_goodsId: items[index].goodsId
                 })
 
 
@@ -440,13 +445,14 @@
                     })
                     items[index].servicesUnselected.splice(serviceIndex, 1)
 
+                    let {service_goods_id, service_image_url, service_short_name, service_price, type_name} = info
                     // 将服务加入到 servicesSelected 中
                     this.servicesSelected.push({
-                        service_goods_id: info.service_goods_id,
-                        service_image_url: info.service_image_url,
-                        service_short_name: info.service_short_name,
-                        service_price: info.service_price,
-                        type_name: info.type_name,
+                        service_goods_id,
+                        service_image_url,
+                        service_short_name,
+                        service_price,
+                        type_name,
                         parent_goodsId: Id
                     })
                 }
@@ -504,51 +510,44 @@
 
         setList(res: any) {
             let items = cartIndex.data.items
-
             let servicesSelected = this.initialServiceSelected(items)
             this.addServiceToCartList(servicesSelected, items)
-
             let giftSelected = this.initialGiftSelected(items)
-
-
             this.addGiftToCartList(giftSelected, items)
 
             this.servicesSelected = servicesSelected
-
             this.giftSelected = giftSelected
-
             this.cartList = this.initialCartList(items)
-
             this.$store.commit('setViewLoading', false)
             this.$NProgress.done()
         }
 
-        initialCartList(items:any){
-            let dealed=[]
+        initialCartList(items: any) {
+            let dealed = []
 
-            items.forEach((item:any)=>{
-                if(!item.type){
+            items.forEach((item: any) => {
+                if (!item.type) {
 
                     console.log('item is good');
+                    let {goodsId, image_url, buy_limit, sel_status, product_name, price,num,servicesUnselected} = item
                     dealed.push({
-                        goodsId: item.goodsId,
-                        image_url: item.image_url,
-                        buy_limit: item.buy_limit,
-                        sel_status: item.sel_status,
-                        product_name: item.product_name,
-                        price: item.price,
-                        num: item.num,
+                        goodsId,
+                        image_url,
+                        buy_limit,
+                        sel_status,
+                        product_name,
+                        price,
+                        num,
                         type: 'good',
-                        servicesUnselected:item.servicesUnselected,
-                        giftsUnselected:item.gift
+                        servicesUnselected,
+                        giftsUnselected: item.gift
                     })
-                }else {
+                } else {
                     dealed.push(item)
                 }
             })
             return dealed
         }
-
 
 
         dealServiceSelected(good: object) {
@@ -565,13 +564,14 @@
                     // 从商品列表中剔除该商品对应的已选中服务
                     this.cartList.splice(goodIndex, 1)
                     // 将 service 放入该商品对应 serveiceList 中，以表示该服务由已选变为未选
-                    good.servicesUnselected.push({
+                    let {service_goods_id,service_image_url,service_short_name,service_price,type_name}=service
 
-                        service_goods_id: service.service_goods_id,
-                        service_image_url: service.service_image_url,
-                        service_short_name: service.service_short_name,
-                        service_price: service.service_price,
-                        type_name: service.type_name,
+                    this.servicesUnselected_add(good,{
+                        service_goods_id,
+                        service_image_url,
+                        service_short_name,
+                        service_price,
+                        type_name,
                     })
                 }
             })
