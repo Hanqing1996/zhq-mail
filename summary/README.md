@@ -468,3 +468,132 @@ export default class App extends Vue {
     }
 }
 ```
+
+#### mailCart 业务逻辑
+* 取消选中商品
+```
+// dealServiceSelected
+商品.serviceList.push(商品对应 services)
+serviceSelected.delete(商品对应 services)
+
+// dealGift
+cartList.delete(商品对应 gifts)
+giftSelected.delete(商品对应 gifts)
+```
+* 选中商品
+```
+// addGiftToCartList
+cartList.push(商品)
+cartList.push(商品对应 gifts)
+giftSelected.push(商品对应 gifts)
+```
+* 待选服务弹窗选中（多个）服务
+```
+// addServiceToCartList
+cartList.push(服务)
+服务对应商品.serviceList.delete(服务)
+serviceSelected.delete(服务)
+```
+* 删除购物车中商品
+```
+cartList.delete(商品)
+cartList.delete(商品对应 services)
+cartList.delete(商品对应 gifts)
+// serviceSelected,商品.serviceList 不作处理
+```
+* 删除购物车中服务
+```
+cartList.delete(服务)
+服务对应商品.serviceList.push(服务)
+serviceSelected.delete(服务)
+```
+
+
+#### 
+* cartListItem
+```
+{
+    sel_status,// type 为'good' 才有
+    goodsId,
+    image_url,
+    product_name,
+    price,// type 为'good' 或'service' 才有
+    num,
+    type,
+    buy_limit,
+    serviceList, // type 为'good' 才有
+    gift, // 商品对应赠品列表，type 为'good' 才有
+    parent_goodsId // type 为'gift'或'service' 才有
+}
+```
+* 商品.serviceListItem
+```
+{
+    service_goods_id,
+    service_image_url,
+    service_short_name,
+    service_price,
+    type_name
+}
+```
+* serviceSelectedItem
+```
+{
+    service_goods_id,
+    service_image_url,
+    service_short_name,
+    service_price,
+    type_name,
+    parent_goodsId
+}
+```
+* giftSelectedItem
+```
+{
+    product_name
+    image_url
+    actId
+    parent_goodsId
+}
+```
+
+由A表到B表，有些字段不必继承（num,checked）
+
+
+
+
+* current_service_types（servicesInPoP）
+```
+{
+    parent_goodsId,
+    list:[
+        {
+            type_name,
+            listUnderType:[
+                {
+                service_goods_id,
+                service_image_url,
+                service_short_name,
+                service_price,
+                type_name,
+                checked // 在待选列表弹窗中，该服务是否被选中
+                },{...},{...}                
+            ]
+        },{...},{...}
+    ]
+}
+```
+
+* checkedServices（servicesCheckedInPoP）
+```
+[{
+    service_goods_id,
+    service_image_url,
+    service_short_name,
+    service_price,
+    type_name
+},{...},{...}]
+```
+
+
+

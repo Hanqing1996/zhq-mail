@@ -22,7 +22,7 @@
                                             :class="{'checked':item.sel_status==1}"
                                             class="choose flex">
                                         <i class="iconfont"
-                                           v-show="!item.type"
+                                           v-show="item.type=='good'"
                                            :class="item.sel_status==1?'icon-roundcheckfill':'icon-round'"></i>
                                     </div>
                                     <router-link
@@ -58,7 +58,9 @@
                                                     <i class="iconfont icon-add"></i>
                                                 </div>
                                             </div>
-                                            <div class="delete" v-if="item.price">
+                                            <div
+                                                    @click="cartDelete(item)"
+                                                    class="delete" v-if="item.price">
                                                 <i class="iconfont icon-delete"></i>
                                             </div>
                                         </div>
@@ -121,12 +123,12 @@
                         <div class="h1">购买服务</div>
                         <div class="max5">
                             <div
-                                    v-for="service_type in current_service_types"
+                                    v-for="service_type in current_service_types.list"
                                     class="border-top-1px mt2x">
                                 <div
-                                        v-if="service_type.list.length"
+                                        v-if="service_type.listUnderType.length"
                                         class="option-title pt32">
-                                    {{service_type.name}}
+                                    {{service_type.type_name}}
                                     <a href="//cdn.cnbj0.fds.api.mi-img.com/b2c-data-mishop/72d5bc482304.html"
                                        class="service-url">
                                         <!-- <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MjhFNUZBNEJBNjg2MTFFN0JGODNEMTFGMzE1NTJDREYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MjhFNUZBNENBNjg2MTFFN0JGODNEMTFGMzE1NTJDREYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpGNEE0ODY5NEE2NzUxMUU3QkY4M0QxMUYzMTU1MkNERiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDoyOEU1RkE0QUE2ODYxMUU3QkY4M0QxMUYzMTU1MkNERiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PqoKySAAAALWSURBVHjatJfPS1RRFMef9002Q9BiRlPIzE2TusgWQZQFFS364aJwUZBEYW3atAv6S1y0K3chSEUbqQaSQoqKirJGwppxMaZvIaSTaPo98L1xebxf900d+KDMu/d+7zn33PPOa3KSmQuKYA/YBQogy2d1sAgqoAy+gvW4BZtinufAEXAIzINpMAsWwIoxpgV0gW7QBl6ASWOMlfB+MEAPnoGfCaMjmzjBCD0C7xLOcxQ4D24xrGlN5t7mWirOYxkwBJrBPfDbacy2gcvgFxgFf8KEz4F2cCckQeQ8DzLJJMHyoAo8JtZUSGIOM0fGzR+19YHDFA3ytAPcBL0UzfH37UyoXibYZ7BmzNsAH8EZel4zhWWRq+AuM9Zv4tkNjpNMnQAl8IZCeW6gwCiWffPXed0ugFeyMS18nLt5GXJWQ/RKbAS8Z3g9eiAh7qF4F6/Smm+NJa6xA3xT9Fru6ZMQ0TzP1KFANWTclO9YguwptVzF+zbP6uNELOqFJI82z7fZIFukVjFD4emYBccSXJ2dxv9zEeNEa6/ihO8N3tcO5onDxKpGjP0hmuJxq0U5DLJ9YJAZX2WhiDIJdUuGb5l6StFBFhTt6WjUi4Emz7OZBjw9Zog+5r1ObIreZi1Fc8aZ2orK3LpipWpNkUy6ZJYs54rWgmJC7E4Z7nKKOaI15zLcB8Bri8mSIDOs00uWwqekxit2GG0s8DbCcfc1yAqs1V9cvraaWeQ/WZyx3qxnITzASM3olmSSjVrSVuc0uE5sWqFuav3thSR0D8Altiv/2raCi+ChLjBmB1Jjh9gP3vIIwmwL29wy/8b15FfYCJSSNHvSjaz+r2bP9Q0ULz+ATvZIlRTXxTzTa3zz3TdFg4S1uLwzl9kjtfMYli0a+rPgpFFON9J8whxlu1JjwZhlJ2F+whTYa/Xwmknv9jztJ0zQR1uRIcwbtXqFd7nCYpToo21TgAEAWy6shL93DD4AAAAASUVORK5CYII="> -->
@@ -134,12 +136,12 @@
                                     </a>
                                 </div>
                                 <div
-                                        v-for="option in service_type.list"
+                                        v-for="option in service_type.listUnderType"
                                         class="options-group">
                                     <div class="align-center justify-start layout wrap">
                                         <div
                                                 @click="checkOption(option)"
-                                                :class="{'on':option.sel_status}"
+                                                :class="{'on':option.checked}"
                                                 class="option-item border-1px align-center justify-center ui-flex">
                                             <p>{{option.service_short_name}} {{option.service_price}}元</p>
                                         </div>
@@ -149,7 +151,7 @@
                         </div>
                         <div class="btn-bottom align-center justify-canter layout">
                             <div class="flex">{{servicesMessage}}</div>
-                            <div class="btn" @click="cartSelService">确定</div>
+                            <div class="btn" @click="cartSelService()">确定</div>
                         </div>
                     </div>
                 </div>
@@ -184,28 +186,96 @@
 
         get checkedServices() {
 
-            let checkedServices = {parent_goodsId:this.current_service_types[0].parent_goodsId,list:[]}
-            this.current_service_types.forEach(({list}: any) => {
-                list.forEach((service: any) => {
-                    if (service.sel_status == 1) {
-                        checkedServices.list.push(service)
+            let checkedServices = []
+
+            this.current_service_types.list.forEach((item: any) => {
+                item.listUnderType.forEach((item2: any) => {
+                    if (item2.checked) {
+                        checkedServices.push({
+                            service_goods_id: item2.service_goods_id,
+                            service_image_url: item2.service_image_url,
+                            service_short_name: item2.service_short_name,
+                            service_price: item2.service_price,
+                            type_name: item2.type_name,
+                        })
                     }
                 })
             })
+
             return checkedServices
         }
 
         get servicesMessage() {
-            return this.checkedServices.list.length ? `已选择${this.checkedServices.list.length}项服务` : '请选择服务类型'
+            return this.checkedServices.length ? `已选择${this.checkedServices.length}项服务` : '请选择服务类型'
         }
+
+        // 商品（选中或不选中），服务（被选中）可以删除
+        cartDelete(good: object) {
+
+            // 要删除的是 service
+            if (good.type && good.type == 'service') {
+                console.log('is service');
+
+                // 从 cartList 中删除该服务
+                let goodIndex = this.cartList.findIndex((item: any) => {
+                    return item.goodsId == good.goodsId
+                })
+                this.cartList.splice(goodIndex, 1)
+
+                let serviceIndex=this.serviceSelected.findIndex((item:any)=>{
+                    return item.service_goods_id==good.goodsId
+                })
+
+                let parentGoodIndex=this.cartList.findIndex((item: any) => {
+                    return item.goodsId == good.parent_goodsId
+                })
+
+
+                // 向 good.serviceList 插入该服务
+                this.cartList[parentGoodIndex].serviceList.push({
+                    service_goods_id:good.goodsId,
+                    service_image_url: good.image_url,
+                    service_short_name: good.product_name,
+                    service_price: good.price,
+                    type_name: this.serviceSelected[serviceIndex].type_name
+                })
+
+                // serviceSelected 删除该服务
+                this.serviceSelected.splice(serviceIndex,1)
+
+
+
+            } else {
+                // 要删除的是商品
+                console.log('is good');
+                let goodIndex = this.cartList.findIndex((item: any) => {
+                    return item.goodsId == good.goodsId
+                })
+
+                // 从 cartList 中删除该商品
+                this.cartList.splice(goodIndex, 1)
+
+                // 从 cartList 中删除该商品对应的 service 和 gift
+                this.cartList = this.cartList.filter((item: any) => {
+
+                    // 是商品，或者是服务或赠品但不对应该商品 则保留
+                    if (item.type=='good'||(item.parent_goodsId&&item.parent_goodsId!=good.goodsId)) {
+                        return true
+                    } else {
+                        return false
+                    }
+                })
+            }
+        }
+
 
         cartSelService() {
             this.$fetch('cartSelService', {
                 'parent_goodsId': this.checkedServices.parent_goodsId,
-                'service_goods_Id': '2'
+                'service_goods_Id': 'xjbx'
             }).then(res => {
-                this.addServiceToCartList(this.checkedServices.list,this.cartList,this.checkedServices.parent_goodsId)
-                this.showServiceInfo=false
+                this.addServiceToCartList(this.checkedServices, this.cartList, this.current_service_types.parent_goodsId)
+                this.showServiceInfo = false
             })
         }
 
@@ -222,21 +292,33 @@
         }
 
         onCartSelService(good: object) {
-            let service_types = []
+            let service_types = {}
+            service_types.parent_goodsId = good.goodsId
+            service_types.list = []
 
-            // 将 serviceList 按 serviec_type_name 分类
+            // 将 serviceList 按 type_name 分类
             good.serviceList.forEach((service: any) => {
 
-                let index = service_types.map(item => item.name).indexOf(service.service_type_name)
+                let index = service_types.list.map(item => item.type_name).indexOf(service.type_name)
+
+                let newService = {
+                    service_goods_id: service.service_goods_id,
+                    service_image_url: service.service_image_url,
+                    service_short_name: service.service_short_name,
+                    service_price: service.service_price,
+                    type_name: service.type_name,
+                    checked: false
+                }
+
 
                 if (index == -1) {
-                    service_types.push({
-                        name: service.service_type_name,
-                        list: [service],
-                        parent_goodsId:good.goodsId
+                    service_types.list.push({
+                        type_name: service.type_name,
+                        listUnderType: [newService],
+                        parent_goodsId: good.goodsId
                     })
                 } else {
-                    service_types[index].list.push(service)
+                    service_types.list[index].listUnderType.push(newService)
                 }
             })
 
@@ -246,7 +328,7 @@
         }
 
         checkOption(option: object) {
-            option.sel_status = option.sel_status ? 0 : 1
+            option.checked = !option.checked
         }
 
         updateRelativeAmount(good: object) {
@@ -290,12 +372,22 @@
                         list.service_info.forEach((info: any) => {
                             if (info.sel_status) {
                                 serviceSelected.push({
-                                    ...info,
-                                    parent_goodsId: item.goodsId,
-                                    service_type_name: list.type_name
+
+                                    service_goods_id: info.service_goods_id,
+                                    service_image_url: info.service_image_url,
+                                    service_short_name: info.service_short_name,
+                                    service_price: info.service_price,
+                                    type_name: list.type_name,
+                                    parent_goodsId: item.goodsId
                                 })
                             } else {
-                                item.serviceList.push({...info, service_type_name: list.type_name})
+                                item.serviceList.push({
+                                    service_goods_id: info.service_goods_id,
+                                    service_image_url: info.service_image_url,
+                                    service_short_name: info.service_short_name,
+                                    service_price: info.service_price,
+                                    type_name: list.type_name,
+                                })
                             }
                         })
                     })
@@ -324,29 +416,31 @@
                     goodsId: info.service_goods_id,
                     image_url: info.service_image_url,
                     buy_limit: items[index].buy_limit,
-                    sel_status: 1,
+                    //sel_status: 0,
                     product_name: info.service_short_name,
                     price: info.service_price,
-                    num: info.num,
-                    parent_goodsId: Id ? Id : info.parent_goodsId,
-                    type: 'service'
+                    num: 1,
+                    type: 'service',
+                    parent_goodsId:items[index].goodsId
                 })
 
 
-                if(Id){
+                if (Id) {
 
                     // 将服务从 items[index].serviceList 中剔除
-                    let serviceIndex=items[index].serviceList.findIndex((item:any)=>{
-                        return info.service_goods_id==item.service_goods_id
+                    let serviceIndex = items[index].serviceList.findIndex((item: any) => {
+                        return info.service_goods_id == item.service_goods_id
                     })
-                    items[index].serviceList.splice(serviceIndex,1)
+                    items[index].serviceList.splice(serviceIndex, 1)
 
                     // 将服务加入到 serviceSelected 中
                     this.serviceSelected.push({
-                        ...info,
-                        sel_status:1,
-                        parent_goodsId: Id,
-                        service_type_name: info.service_type_name
+                        service_goods_id: info.service_goods_id,
+                        service_image_url: info.service_image_url,
+                        service_short_name: info.service_short_name,
+                        service_price: info.service_price,
+                        type_name: info.type_name,
+                        parent_goodsId: Id
                     })
                 }
 
@@ -385,7 +479,6 @@
                     goodsId: gift.actId,
                     image_url: gift.image_url,
                     buy_limit: cartList[index].buy_limit,
-                    sel_status: 1,
                     product_name: gift.product_name,
                     num: cartList[index].num,
                     parent_goodsId: Id ? Id : gift.parent_goodsId,
@@ -414,16 +507,44 @@
             this.serviceSelected = serviceSelected
 
             this.giftSelected = giftSelected
-            this.cartList = items
+
+            this.cartList = this.initialCartList(items)
 
             this.$store.commit('setViewLoading', false)
             this.$NProgress.done()
         }
 
-        dealServiceSelected(good: object) {
+        initialCartList(items:any){
+            let dealed=[]
 
-            // 待删除 Index 列表
-            let toSpliceIndex=[]
+            items.forEach((item:any)=>{
+                if(!item.type){
+
+                    console.log('item is good');
+                    console.log(item);
+                    dealed.push({
+                        goodsId: item.goodsId,
+                        image_url: item.image_url,
+                        buy_limit: item.buy_limit,
+                        sel_status: item.sel_status,
+                        product_name: item.product_name,
+                        price: item.price,
+                        num: item.num,
+                        type: 'good',
+                        serviceList:item.serviceList,
+                        gift:item.gift
+                    })
+                }else {
+                    //console.log(item);
+                    dealed.push(item)
+                }
+            })
+            return dealed
+        }
+
+
+
+        dealServiceSelected(good: object) {
 
             this.serviceSelected.forEach((service: any, serviceIndex: any) => {
 
@@ -437,25 +558,22 @@
                     // 从商品列表中剔除该商品对应的已选中服务
                     this.cartList.splice(goodIndex, 1)
                     // 将 service 放入该商品对应 serveiceList 中，以表示该服务由已选变为未选
-                    // 修改 service 的 sel_status
-                    good.serviceList.push({...service,sel_status:0, service_type_name: service.service_type_name})
-                    // 更新 toSpliceIndex
-                    toSpliceIndex.push(serviceIndex)
+                    good.serviceList.push({
 
+                        service_goods_id: service.service_goods_id,
+                        service_image_url: service.service_image_url,
+                        service_short_name: service.service_short_name,
+                        service_price: service.service_price,
+                        type_name: service.type_name,
+                    })
                 }
             })
 
             // 从 serviceSelected 中剔除 service
-            toSpliceIndex.forEach((index:any)=>{
-                this.serviceSelected.splice(index, 1)
-            })
-
+            this.serviceSelected = this.serviceSelected.filter((item: any) => item.parent_goodsId != good.goodsId)
         }
 
         dealGift(good: object) {
-
-            // 待删除 Index 列表
-            let toSpliceIndex=[]
 
             this.giftSelected.forEach((gift: any, giftIndex: number) => {
                 // 找到该商品对应的 gift
@@ -465,15 +583,11 @@
                     })
                     // 从商品列表中剔除该商品对应的 gift
                     this.cartList.splice(goodIndex, 1)
-                    // 更新 toSpliceIndex
-                    this.giftSelected.splice(giftIndex, 1)
                 }
             })
 
-            // 从 toSpliceIndex 中剔除 gift
-            toSpliceIndex.forEach((index:any)=>{
-                this.giftSelected.splice(index, 1)
-            })
+            // 从 giftSelected 中剔除 gift
+            this.giftSelected = this.giftSelected.filter((item: any) => item.parent_goodsId != good.goodsId)
         }
 
         uncheck(good: object) {
