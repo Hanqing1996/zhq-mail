@@ -130,7 +130,8 @@
                     this.$fetch('userInfo', {userName: this.userName}).then(res => {
                         this.$store.commit('setUserInfo', res.data.user)
                         // 登录完成后，我们希望是回到原来页。
-                        this.$router.back()
+                        let path=this.$route.query.redirect||'/home'
+                        this.$router.push(path)
                     })
                 } else {
                     this.errMsg = res.data.message

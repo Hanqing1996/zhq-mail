@@ -9,7 +9,7 @@
 <script lang="ts">
     import Vue from 'vue'
     import {Component, Watch} from "vue-property-decorator";
-    import {mapGetters, mapMutations, mapState} from "vuex";
+    import {mapActions, mapGetters, mapMutations, mapState} from "vuex";
     import Skeleton from '@/components/Skeleton.vue'
     import store from "@/store";
 
@@ -17,8 +17,7 @@
         components: {Skeleton},
 
         computed: {...mapState(['viewLoading','transitionName'])},
-        methods: {...mapMutations(['setTransitionName'])},
-
+        methods: {...mapMutations(['setTransitionName']),...mapActions(['getUserInfo'])}
     })
     export default class App extends Vue {
 
@@ -32,6 +31,11 @@
             if (to.meta.index && from.meta.index) {
                 this.setTransitionName(to.meta.index < from.meta.index ? 'page-right' : 'page-left')
             }
+        }
+
+        created(){
+            // 打开应用时，自动登录，我觉得这太sb了，注释掉
+            //this.getUserInfo()
         }
     }
 </script>

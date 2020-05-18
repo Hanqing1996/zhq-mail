@@ -5,11 +5,11 @@ const MailLogin =()=>import("@/views/MailLogin.vue")
 const MailCart =()=>import("@/views/MailCart.vue")
 const MailUser =()=>import("@/views/MailUser.vue")
 const MailCategory =()=>import("@/views/MailCategory.vue")
-const MailAddressList =()=>import("@/views/address/MailAddressList.vue")
+const MailAddressList =()=>import("@/views/MailAddressList.vue")
 const MailDetail =()=>import("@/views/MailDetail.vue")
 const MailList =()=>import("@/views/MailList.vue")
 const MailSetting =()=>import("@/views/MailSetting.vue")
-const MailAddressEdit =()=>import("@/views/address/MailAddressEdit.vue")
+const MailAddressEdit =()=>import("@/views/MailAddressEdit.vue")
 const OrderCheckout =()=>import("@/views/order/OrderCheckout.vue")
 const OrderList =()=>import("@/views/order/OrderList.vue")
 const OrderView =()=>import("@/views/order/OrderView.vue")
@@ -20,7 +20,7 @@ Vue.use(VueRouter)
 const routes =[
   {
     path: '/',
-    redirect: 'home'
+    redirect: '/home'
   },
   {
     path: '/home',
@@ -83,7 +83,7 @@ const routes =[
     name: 'addressList',
     component: MailAddressList,
     meta: {
-      requiresAuth: true
+      //requiresAuth: true
     }
   },
   {
@@ -91,7 +91,7 @@ const routes =[
     name: 'addressEdit',
     component: MailAddressEdit,
     meta: {
-      requiresAuth: true
+      //requiresAuth: true
     }
   },
   {

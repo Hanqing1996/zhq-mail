@@ -25,10 +25,12 @@ export default new Vuex.Store({
       state.transitionName = transitionName
     },
     setUserInfo (state, info) {
+      console.log('setUserInfo');
       state.userInfo = info
     }
   },
   actions: {
+    // 数据是异步获取的，所以放在 actions 中
     getUserInfo ({ commit }) {
       fetch('userInfo',{}).then((res:any) => {
         commit('setUserInfo', res.data.user)

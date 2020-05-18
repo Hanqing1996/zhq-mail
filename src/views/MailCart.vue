@@ -5,12 +5,12 @@
             <div class="container fluid app-view app-view-with-header">
                 <div class="page-wrap">
                     <div class="nologin">
-                        <a class="box-flex align-center justify-space-between">
+                        <a class="box-flex align-center justify-space-between" v-if="!isLogin">
                             <span class="flex">登录后享受更多优惠</span>
-                            <em class="flex">去登录</em>
+                            <router-link class="flex" :to="{name: 'login',query:{redirect:'/cart'}}" tag="em">去登录</router-link>
                         </a>
                     </div>
-                    <div class="cart-list">
+                    <div class="cart-list" v-if="cartList&&cartList.length>0">
                         <ol>
                             <li
                                     v-for="item in cartList"
@@ -103,12 +103,21 @@
                         </div>
                         <div class="ui-line"></div>
                     </div>
+
+                    <div v-if="cartList&&cartList.length==0" class="noitems">
+                        <router-link :to="{name: 'home'}" class="router-link-active">
+                            <span>购物车还是空的</span>
+                            <em>去逛逛</em>
+                        </router-link>
+                    </div>
+
+
                 </div>
                 <div class="bottom-submit box-flex">
                     <div class="price-box flex">
-                        <span>共13件 金额：</span>
+                        <span>共{{totalAmount}}件 金额：</span>
                         <br>
-                        <strong>10153</strong>
+                        <strong>{{totalMoney}}</strong>
                         <span>元</span>
                     </div>
                     <a href="/category" class="btn disable black flex">继续购物</a>
@@ -168,6 +177,7 @@
     import {cartIndex} from "@/mock/cart.js"
 
     import Component from 'vue-class-component'
+    import {mapGetters, mapState} from "vuex";
 
     Component.registerHooks([
         'beforeRouteEnter',
@@ -175,7 +185,7 @@
         'beforeRouteLeave'
     ])
 
-    @Component({components: {Title}})
+    @Component({components: {Title}, computed: { ...mapGetters(['isLogin'])}})
     export default class MailCart extends Vue {
 
         cartList = []
@@ -183,6 +193,26 @@
         giftSelected = []
         servicesInPoP = []
         showServiceInfo = false
+
+        get totalAmount(){
+            let totalAmount=0
+            this.cartList.forEach((item:any)=>{
+                if(item.sel_status||item.type=='service'||item.type=='gift'){
+                    totalAmount+=item.num
+                }
+            })
+            return totalAmount
+        }
+
+        get totalMoney(){
+            let totalMoney=0
+            this.cartList.forEach((item:any)=>{
+                if(item.sel_status||item.type=='service'){
+                    totalMoney+=item.num*item.price
+                }
+            })
+            return totalMoney
+        }
 
         get servicesCheckedInPoP() {
 
@@ -211,7 +241,7 @@
         }
 
 
-        servicesUnselected_add(good: any,service:any) {
+        servicesUnselected_add(good: any, service: any) {
             good.servicesUnselected.push(service)
         }
 
@@ -219,59 +249,62 @@
         // 商品（选中或不选中），服务（被选中）可以删除
         cartDelete(good: object) {
 
-            // 要删除的是 service
-            if (good.type && good.type == 'service') {
-                console.log('is service');
 
-                // 从 cartList 中删除该服务
-                let goodIndex = this.cartList.findIndex((item: any) => {
-                    return item.goodsId == good.goodsId
-                })
-                this.cartList.splice(goodIndex, 1)
+            this.$fetch('cartDelete', {
+                'goodsId': good.goodsId
+            }).then(res => {
+                // 要删除的是 service
+                if (good.type && good.type == 'service') {
 
-                let serviceIndex = this.servicesSelected.findIndex((item: any) => {
-                    return item.service_goods_id == good.goodsId
-                })
+                    // 从 cartList 中删除该服务
+                    let goodIndex = this.cartList.findIndex((item: any) => {
+                        return item.goodsId == good.goodsId
+                    })
+                    this.cartList.splice(goodIndex, 1)
 
-                let parentGoodIndex = this.cartList.findIndex((item: any) => {
-                    return item.goodsId == good.parent_goodsId
-                })
+                    let serviceIndex = this.servicesSelected.findIndex((item: any) => {
+                        return item.service_goods_id == good.goodsId
+                    })
 
-
-                // 向 good.servicesUnselected 插入该服务
-                this.servicesUnselected_add(this.cartList[parentGoodIndex],{
-                    service_goods_id: good.goodsId,
-                    service_image_url: good.image_url,
-                    service_short_name: good.product_name,
-                    service_price: good.price,
-                    type_name: this.servicesSelected[serviceIndex].type_name
-                })
-
-                // servicesSelected 删除该服务
-                this.servicesSelected.splice(serviceIndex, 1)
+                    let parentGoodIndex = this.cartList.findIndex((item: any) => {
+                        return item.goodsId == good.parent_goodsId
+                    })
 
 
-            } else {
-                // 要删除的是商品
-                console.log('is good');
-                let goodIndex = this.cartList.findIndex((item: any) => {
-                    return item.goodsId == good.goodsId
-                })
+                    // 向 good.servicesUnselected 插入该服务
+                    this.servicesUnselected_add(this.cartList[parentGoodIndex], {
+                        service_goods_id: good.goodsId,
+                        service_image_url: good.image_url,
+                        service_short_name: good.product_name,
+                        service_price: good.price,
+                        type_name: this.servicesSelected[serviceIndex].type_name
+                    })
 
-                // 从 cartList 中删除该商品
-                this.cartList.splice(goodIndex, 1)
+                    // servicesSelected 删除该服务
+                    this.servicesSelected.splice(serviceIndex, 1)
 
-                // 从 cartList 中删除该商品对应的 service 和 gift
-                this.cartList = this.cartList.filter((item: any) => {
 
-                    // 是商品，或者是服务或赠品但不对应该商品 则保留
-                    if (item.type == 'good' || (item.parent_goodsId && item.parent_goodsId != good.goodsId)) {
-                        return true
-                    } else {
-                        return false
-                    }
-                })
-            }
+                } else {
+                    // 要删除的是商品
+                    let goodIndex = this.cartList.findIndex((item: any) => {
+                        return item.goodsId == good.goodsId
+                    })
+
+                    // 从 cartList 中删除该商品
+                    this.cartList.splice(goodIndex, 1)
+
+                    // 从 cartList 中删除该商品对应的 service 和 gift
+                    this.cartList = this.cartList.filter((item: any) => {
+
+                        // 是商品，或者是服务或赠品但不对应该商品 则保留
+                        if (item.type == 'good' || (item.parent_goodsId && item.parent_goodsId != good.goodsId)) {
+                            return true
+                        } else {
+                            return false
+                        }
+                    })
+                }
+            })
         }
 
 
@@ -393,7 +426,7 @@
                                     parent_goodsId: item.goodsId
                                 })
                             } else {
-                                this.servicesUnselected_add(item,{
+                                this.servicesUnselected_add(item, {
                                     service_goods_id,
                                     service_image_url,
                                     service_short_name,
@@ -409,8 +442,7 @@
         }
 
         addServiceToCartList(services: any, items: any, Id?: string) {
-
-
+            console.log('add Service');
             // 将被选中的服务添加到商品列表中，注意页面上被选中服务总位于对应商品下方，所以需要 parent_goodsId
             services.forEach((info: any) => {
 
@@ -509,7 +541,8 @@
         }
 
         setList(res: any) {
-            let items = cartIndex.data.items
+            // 如果这里不做深拷贝，我们对 items 的操作会影响源数据 cartIndex.data.items
+            let items =JSON.parse(JSON.stringify(cartIndex.data.items))
             let servicesSelected = this.initialServiceSelected(items)
             this.addServiceToCartList(servicesSelected, items)
             let giftSelected = this.initialGiftSelected(items)
@@ -522,14 +555,14 @@
             this.$NProgress.done()
         }
 
+
         initialCartList(items: any) {
             let dealed = []
 
             items.forEach((item: any) => {
                 if (!item.type) {
 
-                    console.log('item is good');
-                    let {goodsId, image_url, buy_limit, sel_status, product_name, price,num,servicesUnselected} = item
+                    let {goodsId, image_url, buy_limit, sel_status, product_name, price, num, servicesUnselected} = item
                     dealed.push({
                         goodsId,
                         image_url,
@@ -554,7 +587,6 @@
 
             this.servicesSelected.forEach((service: any, serviceIndex: any) => {
 
-
                 // 找到该商品对应的已选中服务
                 if (service.parent_goodsId == good.goodsId) {
 
@@ -564,9 +596,9 @@
                     // 从商品列表中剔除该商品对应的已选中服务
                     this.cartList.splice(goodIndex, 1)
                     // 将 service 放入该商品对应 serveiceList 中，以表示该服务由已选变为未选
-                    let {service_goods_id,service_image_url,service_short_name,service_price,type_name}=service
+                    let {service_goods_id, service_image_url, service_short_name, service_price, type_name} = service
 
-                    this.servicesUnselected_add(good,{
+                    this.servicesUnselected_add(good, {
                         service_goods_id,
                         service_image_url,
                         service_short_name,
@@ -1040,4 +1072,34 @@
         font-size: 16px;
         line-height: 47px;
     }
+
+    .noitems {
+        background: #ebebeb;
+        padding: 10px;
+    }
+    .noitems>a {
+        height: 72px;
+        font-size: 12px;
+        text-decoration: none;
+        text-align: center;
+    }
+    .noitems>a span {
+        display: inline-block;
+        line-height: 40px;
+        background: url(../assets/images/cart_noitems.png) no-repeat 0;
+        background-size: auto 100%;
+        padding: 0 8px 0 48px;
+        color: rgba(0,0,0,.27);
+    }
+    .noitems>a em {
+        display: inline-block;
+        border: 1px solid rgba(0,0,0,.15);
+        box-sizing: border-box;
+        height: 25px;
+        line-height: 25px;
+        padding: 0 12px;
+        color: rgba(0,0,0,.87);
+        font-style: normal;
+    }
+
 </style>

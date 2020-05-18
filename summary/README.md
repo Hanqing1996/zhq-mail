@@ -118,9 +118,15 @@ beforeRouteEnter(to:any, from:any, next:any){
     next()
 }
 ```
-
-
-#### 监听路由
+* redirect
+> “重定向”的意思是，当用户访问 / 时，URL 将会被替换成 /home，然后匹配路由为 /home
+```
+  {
+    path: '/',
+    redirect: '/home'
+  }
+```
+* 监听路由
 ```
 @Watch('$route')
 onRouteChanged(to: any, from: any) {
@@ -134,6 +140,70 @@ onRouteChanged(to: any, from: any) {
     }
 }
 ```
+
+
+#### 登录设置
+1. 登录成功后返回原页面
+2. 登录限制：即访问某个页面前必须先登录
+* 在路由中为 set 路由添加 requiresAuth 属性
+``` 
+// router/index.ts
+
+{
+    path: '/user/set',
+    name: 'set',
+    component: MailSetting,
+    meta: {
+      requiresAuth: true
+    }
+}
+```
+* 利用 导航守卫 截断页面访问，保证“先登录，后访问”
+```
+// main.ts
+
+router.beforeEach((to, from, next) => {
+    if (to.meta.requiresAuth && !store.getters.isLogin) {
+        next({
+          name: 'login',
+          query: { redirect: to.fullPath } // 记录原目的页面路由，用于登录完成后返回
+        })
+    } else {
+        next()
+    }
+})
+```
+```
+// 类似：router-link 的 redirect 传递
+
+// MailCart 登录入口
+<router-link class="flex" :to="{name: 'login',query:{redirect:'/cart'}}" tag="em">去登录</router-link>
+
+// MailUser 登录入口
+<router-link :to="{name: 'login',query:{redirect:'/user'}}" class="name" tag="div">登录/注册</router-link>
+```
+
+
+* MailLogin.vue（LoginForm）
+```
+this.$fetch('login', data).then(res => {
+    let status = res.status
+    if (status === 200) {
+        console.log('成功登录')
+        this.$fetch('userInfo', {userName: this.userName}).then(res => {
+            this.$store.commit('setUserInfo', res.data.user)
+            // 登录完成后，我们希望是回到原来页。
+            let path=this.$route.query.redirect||'/home'
+            this.$router.push(path)
+        })
+    } else {
+        this.errMsg = res.data.message
+    }
+}).catch(err => {
+    console.log(err)
+})
+```
+
 
 #### 路由切换 and 刷新
 1. 过渡效果的差异
@@ -412,8 +482,8 @@ export default class MailDetail extends Vue {
 > 比如当 name 改变（触发 set,被Vue 发现）的时候，name 会遍历自己的依赖收集器 subs，逐个通知 watcher，让 watcher 完成更新。该过程称为依赖更新。
 
 
-#### sku
-> sku 的数据不来自 rap2，而是直接用mock
+#### sku,cartIndex,address
+> 数据不来自 rap2，而是直接用mock
 
 
 #### 【vue】 transition 的使用
@@ -596,5 +666,7 @@ servicesSelected.delete(服务)
 },{...},{...}]
 ```
 
-
+#### 未登录加入购物车
+* 服务器缓存(小米商城、京东、国美、苏宁、当当)
+* 登录限制-必须先登录才能加入购物车(淘宝天猫、唯品会)
 
