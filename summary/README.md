@@ -205,6 +205,20 @@ this.$fetch('login', data).then(res => {
 ```
 
 
+#### router-link
+* params
+> http://localhost:8081/commodity/list/370000199811102620
+```
+<router-link :to="{name: 'list', params: {id: product.category_id}}">
+```
+* query
+> http://localhost:8081/address/edit?address_id=370000198712031236
+```
+<router-link :to="{name: 'addressEdit',query:{'address_id':list.address_id}}">编辑地址</router-link>
+```
+
+
+
 #### 路由切换 and 刷新
 1. 过渡效果的差异
 > 比如 App.vue 页面中
@@ -482,7 +496,7 @@ export default class MailDetail extends Vue {
 > 比如当 name 改变（触发 set,被Vue 发现）的时候，name 会遍历自己的依赖收集器 subs，逐个通知 watcher，让 watcher 完成更新。该过程称为依赖更新。
 
 
-#### sku,cartIndex,address
+#### sku,cartIndex,addressAll
 > 数据不来自 rap2，而是直接用mock
 
 
@@ -670,3 +684,7 @@ servicesSelected.delete(服务)
 * 服务器缓存(小米商城、京东、国美、苏宁、当当)
 * 登录限制-必须先登录才能加入购物车(淘宝天猫、唯品会)
 
+##### v-model 输入内容处理
+```
+<input v-model.trim.number="addressInfo.tel"  placeholder="手机号" name="tel">
+```

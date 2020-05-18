@@ -141,6 +141,10 @@
         changeIndex(index: number) {
             this.curIndex = index
         }
+
+        destroyed() {
+            this.$NProgress.remove()
+        }
     }
 
 </script>

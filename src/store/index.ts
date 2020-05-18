@@ -25,7 +25,6 @@ export default new Vuex.Store({
       state.transitionName = transitionName
     },
     setUserInfo (state, info) {
-      console.log('setUserInfo');
       state.userInfo = info
     }
   },

@@ -139,6 +139,10 @@
             // 未加载过数据的 nav 被选中，才加载对应数据并显示进度条
             !this.navList[index].hasData && this.getHomePage()
         }
+
+        destroyed() {
+            this.$NProgress.remove()
+        }
     }
 </script>
 <style scoped lang="scss">

@@ -90,6 +90,10 @@
             this.$NProgress.done()
         }
 
+        destroyed() {
+            this.$NProgress.remove()
+        }
+
 
     }
 </script>

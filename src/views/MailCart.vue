@@ -668,6 +668,10 @@
                 this.check(good)
             }
         }
+
+        destroyed() {
+            this.$NProgress.remove()
+        }
     }
 </script>
 <style scoped>

@@ -20,10 +20,14 @@
                                         <span>{{list.tel}}</span>
                                         <em v-if="list.is_default"> [默认]</em>
                                     </li>
-                                    <li class="ui-list-item edit">
+
+                                    <router-link
+                                            :to="{name: 'addressEdit',query:{'address_id':list.address_id}}"
+                                            tag="li"
+                                            class="ui-list-item edit">
                                         <p>{{list.province}} {{list.city}} {{list.district}} {{list.area}}</p>
                                         <p>{{list.address}}</p>
-                                    </li>
+                                    </router-link>
                                 </ul>
                             </div>
 
@@ -75,12 +79,15 @@
         }
 
         setList(res: any) {
-            console.log(res.data);
             this.addressList = res.data
             this.$store.commit('setViewLoading', false)
             this.$NProgress.done()
 
         }
+        destroyed() {
+            this.$NProgress.remove()
+        }
+
     }
 
 </script>
