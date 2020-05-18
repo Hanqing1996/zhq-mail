@@ -75,7 +75,7 @@ const routes =[
     name: 'set',
     component: MailSetting,
     meta: {
-      requiresAuth: true
+      //requiresAuth: true
     }
   },
   {

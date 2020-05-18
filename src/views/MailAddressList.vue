@@ -6,33 +6,28 @@
                 <div class="page-wrap">
                     <div class="address-manager">
                         <div class="address-manager-list">
-                            <div class="ui-card">
+
+
+
+                            <div
+                                    v-for="(list,index) in addressList"
+                                    :key="list.address_id"
+                                    class="ui-card">
                                 <ul class="ui-card-item ui-list">
                                     <li class="ui-list-item identity">
                                         <a href="javascript:;">删除</a>
-                                        <span class="consignee">tony</span>
-                                        <span>131****5678</span>
-                                        <em> [默认]</em>
+                                        <span class="consignee">{{list.consignee}}</span>
+                                        <span>{{list.tel}}</span>
+                                        <em v-if="list.is_default"> [默认]</em>
                                     </li>
                                     <li class="ui-list-item edit">
-                                        <p>北京 北京市 朝阳区 奥运村街道</p>
-                                        <p>测试地址数据</p>
+                                        <p>{{list.province}} {{list.city}} {{list.district}} {{list.area}}</p>
+                                        <p>{{list.address}}</p>
                                     </li>
                                 </ul>
                             </div>
-                            <div class="ui-card">
-                                <ul class="ui-card-item ui-list">
-                                    <li class="ui-list-item identity">
-                                        <a href="javascript:;">删除</a>
-                                        <span class="consignee">tony</span>
-                                        <span>131****5678</span>
-                                    </li>
-                                    <li class="ui-list-item edit">
-                                        <p>广东 珠海市 香洲区 保税区</p>
-                                        <p>华发国际花园</p>
-                                    </li>
-                                </ul>
-                            </div>
+
+
                         </div>
                     </div>
                 </div>
@@ -60,6 +55,8 @@
 
     @Component({components: {Title}})
     export default class MailAddressList extends Vue {
+        addressList=[]
+
         beforeRouteEnter(to: any, from: any, next: any) {
             if (!from.name) {
                 // 刷新
@@ -79,7 +76,7 @@
 
         setList(res: any) {
             console.log(res.data);
-            //this.categoryList = res.data.lists
+            this.addressList = res.data
             this.$store.commit('setViewLoading', false)
             this.$NProgress.done()
 
