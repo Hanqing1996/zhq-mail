@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import fetch from '@/api/fetch.ts'
+import addressModule from "@/store/modules/address";
 
 Vue.use(Vuex)
 
@@ -37,5 +38,9 @@ export default new Vuex.Store({
     }
   },
   modules: {
+    address:{
+      namespaced:true,
+      ...addressModule
+    }
   }
 })

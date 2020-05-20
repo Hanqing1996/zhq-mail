@@ -688,3 +688,8 @@ servicesSelected.delete(服务)
 ```
 <input v-model.trim.number="addressInfo.tel"  placeholder="手机号" name="tel">
 ```
+
+#### vuex 应该管理哪些数据
+> 跨页面的数据，比如地址列表（addressList,detail）,用户信息，加载状态，是否登录
+* 不应该管理的数据
+> 比如 showPop 之类的UI数据，或只在某个组件中出现的数据

@@ -36,6 +36,7 @@
         created(){
             // 打开应用时，自动登录，我觉得这太sb了，注释掉
             //this.getUserInfo()
+
         }
     }
 </script>

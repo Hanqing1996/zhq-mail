@@ -68,6 +68,15 @@
     import Title from "@/components/Title.vue"
     import AddressAll from "@/components/AddressAll.vue"
 
+
+    interface AddressObject {
+        [key:string]:any
+    }
+
+    import Address from '@/api/address.ts'
+
+    const myAddress:AddressObject=Address
+
     @Component({components: {Title,AddressAll}})
     export default class MailAddressEdit extends Vue {
 
@@ -115,8 +124,6 @@
                     })
                 }
             } else
-                // 新增，不请求资源
-                this.$NProgress.done()
             next()
         }
 
@@ -149,8 +156,8 @@
 
         submit() {
             // 校验
-            let api = this.$route.query.address_id ? 'addressSave' : 'addressAdd'
-            this.$fetch(api, {}).then(res => {
+            let api = this.$route.query.address_id ? 'save' : 'add'
+            myAddress[api](this.addressInfo).then((res:any) => {
                 this.$router.go(-1)
             })
         }

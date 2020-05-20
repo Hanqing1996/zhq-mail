@@ -62,12 +62,14 @@
                         </div>
                     </div>
                     <div class="product-section more padding-16-32">
-                        <div class="border-top-1px ui-flex align-start justify-start J_linksign-customize">
+                        <div
+                                @click="showAddressPop=true"
+                                class="border-top-1px ui-flex align-start justify-start J_linksign-customize">
                             <div class="title">送至</div>
                             <div class="flex">
                                 <div class="info">
-                                    <span class="mr1x">珠海市 香洲区</span>
-                                    <span class="on">有现货</span>
+                                    <span class="mr1x">{{deliveryData&&deliveryData.address_info&&deliveryData.address_info.address}}</span>
+                                    <span class="on">{{deliveryData&&deliveryData.datas.length?'有现货':''}}</span>
                                 </div>
                             </div>
                         </div>
@@ -158,7 +160,30 @@
                         :buyOption="buyOption"
                         @updateOption="chooseItem"
                 />
-
+                <MailPop v-model="showAddressPop">
+                    <div class="h1">
+                        <p>收货地址</p>
+                    </div>
+                    <div class="max5">
+                        <div
+                                v-for="item in addressList"
+                                :key="item.address_id"
+                                @click="selectAddress(item)"
+                                class="border-bottom-1px address-item">
+                            <div class="address-item-line1 layout align-center justify-start">
+                                <i class="iconfont icon-locationfill"></i>
+                                <div class="address-item-name">{{item.consignee}}</div>
+                                <div class="address-item-province">{{item.city}}</div>
+                            </div>
+                            <div class="address-item-line2">{{item.address}}</div>
+                        </div>
+                    </div>
+                    <div class="btn-bottom">
+                        <div class="action-box flex">
+                            <a href="/address/position?from=product&amp;product_id=8274" class="btn buy-btn">选择新地址</a>
+                        </div>
+                    </div>
+                </MailPop>
 
                 <footer>
                     <div class="fill-height layout align-center">
@@ -178,26 +203,6 @@
             </div>
         </div>
 
-        <!-- 地址选择 -->
-        <!-- <div class="h1">
-          <p>收货地址</p>
-        </div>
-        <div class="max5">
-          <div class="border-bottom-1px address-item">
-            <div class="address-item-line1 layout align-center justify-start">
-              <i class="image-icons icon-location"></i>
-              <div class="address-item-name">tony</div>
-              <div class="address-item-province">北京</div>
-            </div>
-            <div class="address-item-line2">北京小胡同</div>
-          </div>
-        </div>
-        <div class="btn-bottom">
-          <div class="action-box flex">
-            <a href="/address/position?from=product&amp;product_id=8274" class="btn buy-btn">选择新地址</a>
-          </div>
-        </div> -->
-
 
     </div>
 </template>
@@ -211,11 +216,13 @@
     import Component from 'vue-class-component'
     import MailRecommend from "@/components/MailRecommend.vue"
     import MailSKU from "@/components/MailSKU.vue"
+    import MailPop from "@/components/MailPop.vue";
 
     import Comment from "@/components/Comment.vue";
     import DOMPurify from "dompurify";
 
-    import {default_goods_id, buy_option,goods_info} from "@/mock/sku.js"
+    import {default_goods_id, buy_option, goods_info} from "@/mock/sku.js"
+    import {mapActions, mapGetters, mapMutations, mapState} from "vuex";
 
     Component.registerHooks([
         'beforeRouteEnter',
@@ -223,7 +230,13 @@
         'beforeRouteLeave'
     ])
 
-    @Component({components: {Comment, MailRecommend,MailSKU}})
+    @Component({
+        components: {Comment, MailRecommend, MailSKU, MailPop},
+        computed: {...mapGetters(['isLogin']),...mapState({addressList:state=>state.address.list}),...mapGetters({defaultAddress: 'address/default'})},
+
+        //computed: {...mapGetters(['isLogin'])},
+        methods: {...mapActions('address', ['getAddressList'])}
+    })
     export default class MailDetail extends Vue {
         productData = null
         galleryView = null
@@ -233,14 +246,63 @@
         commentView = null
         descTabsView = null
         descTabsViewIndex = 0
-        showSKU=false
-        buyOption=null
-        goodsInfo=null
-        selectedSKU=[]
-        selectedGood=null
+        showSKU = false
+        buyOption = null
+        goodsInfo = null
+        selectedSKU = []
+        selectedGood = null
 
-        get showMask(){
+        showAddressPop = false
+        deliveryData = null
+
+        get showMask() {
             return this.showSKU
+        }
+
+        created() {
+/*
+            if (this.isLogin) {
+                // 已登录，直接请求 addressList 接口
+                this.getAddressList(() => {
+                    // 在不做选择的情况下显示默认地址
+                    if (this.defaultAddress) {
+                        this.$fetch('estDelivery', {
+                            address_id: this.defaultAddress.address_id
+                        }).then(res => {
+                            this.deliveryData = res.data
+                        })
+                    }
+                })
+            }else {
+                // 未登录，根据经纬度确定
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition((position) => {
+                        this.$fetch('estDelivery', {
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude
+                        }).then(res => {
+                            console.log(res.data);
+                            this.deliveryData = res.data
+                        })
+                    })
+                }
+            }
+            */
+
+
+
+            this.getAddressList(() => {
+                if (this.defaultAddress) {
+                    this.$fetch('estDelivery', {
+                        address_id: this.defaultAddress.address_id
+                    }).then(res => {
+                        this.deliveryData = res.data
+                    })
+                }
+            })
+
+
+
         }
 
         destroyed() {
@@ -248,24 +310,34 @@
             this.$NProgress.remove()
         }
 
-        chooseItem(option:object,index:number){
-
-            option.list.forEach((item:any,i:number)=>{
-                item.isOn=i==index
-            })
-
-            let curSKUIndex=this.selectedSKU.findIndex((item:any)=>{
-                return item.prop_cfg_id==option.prop_cfg_id
-            })
-            this.selectedSKU[curSKUIndex].prop_value_id=option.list[index].prop_value_id
-
-            this.selectedGood=this.goodsInfo.find((item:any)=>{
-                return JSON.stringify(item.prop_list)===JSON.stringify(this.selectedSKU)
+        // 变更收货地址
+        selectAddress(item:any){
+            this.$fetch('estDelivery', {
+                address_id: item.address_id
+            }).then(res => {
+                this.deliveryData = res.data
+                this.showAddressPop=false
             })
         }
 
-        addToCart(){
-            this.showSKU=true
+        chooseItem(option: object, index: number) {
+
+            option.list.forEach((item: any, i: number) => {
+                item.isOn = i == index
+            })
+
+            let curSKUIndex = this.selectedSKU.findIndex((item: any) => {
+                return item.prop_cfg_id == option.prop_cfg_id
+            })
+            this.selectedSKU[curSKUIndex].prop_value_id = option.list[index].prop_value_id
+
+            this.selectedGood = this.goodsInfo.find((item: any) => {
+                return JSON.stringify(item.prop_list) === JSON.stringify(this.selectedSKU)
+            })
+        }
+
+        addToCart() {
+            this.showSKU = true
         }
 
         beforeRouteEnter(to: any, from: any, next: any) {
@@ -314,20 +386,20 @@
             this.canJoinActs = res.data.view_content.titleView.titleView.canJoinActs[0]
             this.commentView = res.data.view_content.commentView.commentView
 
-            this.goodsInfo=goods_info
-            this.selectedGood=this.goodsInfo.find((item:any)=>{
-                return item.goods_id==default_goods_id
+            this.goodsInfo = goods_info
+            this.selectedGood = this.goodsInfo.find((item: any) => {
+                return item.goods_id == default_goods_id
             })
 
-            let buyOption=buy_option
-            buy_option.forEach((item:any)=>{
-                item.list.forEach((list:any)=>{
-                    list.isOn=false
+            let buyOption = buy_option
+            buy_option.forEach((item: any) => {
+                item.list.forEach((list: any) => {
+                    list.isOn = false
                 })
-                item.hasPrice=!!item.list[0].price
+                item.hasPrice = !!item.list[0].price
             })
 
-            this.selectedGood&&this.selectedGood.prop_list.forEach((item:any)=>{
+            this.selectedGood && this.selectedGood.prop_list.forEach((item: any) => {
                 /*
                 // 选中产品信息如下
                 {
@@ -342,18 +414,18 @@
                 }
                 */
 
-                let curOption=buyOption.find((option:any)=>{
-                    return option.prop_cfg_id==item.prop_cfg_id
+                let curOption = buyOption.find((option: any) => {
+                    return option.prop_cfg_id == item.prop_cfg_id
                 })
-                let curIndex=curOption.list.findIndex((list:any)=>{
-                    return list.prop_value_id==item.prop_value_id
+                let curIndex = curOption.list.findIndex((list: any) => {
+                    return list.prop_value_id == item.prop_value_id
                 })
-                curOption.list[curIndex].isOn=true
+                curOption.list[curIndex].isOn = true
             })
 
-            this.selectedSKU=JSON.parse(JSON.stringify(this.selectedGood.prop_list))
+            this.selectedSKU = JSON.parse(JSON.stringify(this.selectedGood.prop_list))
 
-            this.buyOption=buyOption
+            this.buyOption = buyOption
 
             //console.log(this.selectedGood);
 
@@ -910,12 +982,82 @@
     }
 
 
-    .sku-enter-active, .sku-leave-active{
+    .sku-enter-active, .sku-leave-active {
         transition: transform .5s;
     }
 
-    .sku-enter,.sku-leave-to{
+    .sku-enter, .sku-leave-to {
         transform: translateY(100%);
+    }
+
+    /* 地址pop */
+    .pop .h1 {
+        color: rgba(0, 0, 0, .87);
+        font-size: 16px;
+        text-align: center;
+        padding: 12px 0;
+    }
+
+    .max5 {
+        max-height: 300px;
+        overflow-x: hidden;
+        overflow-y: scroll;
+    }
+
+    .pop .address-item {
+        text-align: left;
+        padding: 8px 0;
+    }
+
+    .pop .address-item-line1 {
+        font-size: 16px;
+        color: rgba(0, 0, 0, .87);
+        line-height: 20px;
+    }
+
+    .pop .address-item-line1 .address-item-name {
+        margin-right: 5px;
+    }
+
+    .pop .address-item-line2 {
+        font-size: 14px;
+        color: rgba(0, 0, 0, .54);
+        padding-left: 22px;
+    }
+
+    .pop .btn-bottom {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+
+    .icon-locationfill {
+        font-size: 14px;
+        margin-right: 8px;
+    }
+
+    .border-bottom-1px:before {
+        transform: scaleY(0.2);
+    }
+
+    .bubble {
+        position: absolute;
+        min-width: 14px;
+        line-height: 14px;
+        height: 14px;
+        box-sizing: border-box;
+        padding: 0 3px;
+        font-size: 10px;
+        overflow: hidden;
+        text-align: center;
+        border-radius: 10px;
+        background: #ed4d41;
+        color: #fff;
+        top: 0;
+        /* left: 50%; */
+        transform: translate3d(40px, 2px, 0);
+        font-style: normal;
     }
 
 </style>

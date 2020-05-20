@@ -34,8 +34,8 @@
     import Vue from 'vue'
     import {Component, Prop, Watch} from "vue-property-decorator";
 
-    import addressAll from '@/mock/addressAll.js'
-    import Address from '@/api/address.ts'
+    import addressAll from '@/mock/addressAll.js';
+    import Address from '../api/address.ts'
 
     @Component
     export default class AddressAll extends Vue {

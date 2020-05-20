@@ -36,9 +36,11 @@
                     </div>
                 </div>
                 <div class="add">
-                    <a href="javascript:;" class="btn ui-button ui-button-active">
+                    <router-link
+                            :to="{name: 'addressEdit'}"
+                            class="btn ui-button ui-button-active">
                         <span>新建地址</span>
-                    </a>
+                    </router-link>
                 </div>
             </div>
         </div>
