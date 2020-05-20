@@ -180,10 +180,12 @@
                     </div>
                     <div class="btn-bottom">
                         <div class="action-box flex">
-                            <a href="/address/position?from=product&amp;product_id=8274" class="btn buy-btn">选择新地址</a>
+                            <span class="btn buy-btn" @click="showAddressPop=false;showRegions=true">选择新地址</span>
                         </div>
                     </div>
                 </MailPop>
+
+                <AddressAll v-model="showRegions" @region="changeRegion"/>
 
                 <footer>
                     <div class="fill-height layout align-center">
@@ -220,6 +222,7 @@
 
     import Comment from "@/components/Comment.vue";
     import DOMPurify from "dompurify";
+    import AddressAll from "@/components/AddressAll.vue";
 
     import {default_goods_id, buy_option, goods_info} from "@/mock/sku.js"
     import {mapActions, mapGetters, mapMutations, mapState} from "vuex";
@@ -231,7 +234,7 @@
     ])
 
     @Component({
-        components: {Comment, MailRecommend, MailSKU, MailPop},
+        components: {Comment, MailRecommend, MailSKU, MailPop,AddressAll},
         computed: {...mapGetters(['isLogin']),...mapState({addressList:state=>state.address.list}),...mapGetters({defaultAddress: 'address/default'})},
 
         //computed: {...mapGetters(['isLogin'])},
@@ -254,6 +257,7 @@
 
         showAddressPop = false
         deliveryData = null
+        showRegions=false
 
         get showMask() {
             return this.showSKU
@@ -262,7 +266,7 @@
         created() {
 /*
             if (this.isLogin) {
-                // 已登录，直接请求 addressList 接口
+                // 已登录，依据默认地址请求 addressList 接口
                 this.getAddressList(() => {
                     // 在不做选择的情况下显示默认地址
                     if (this.defaultAddress) {
@@ -274,7 +278,7 @@
                     }
                 })
             }else {
-                // 未登录，根据经纬度确定
+                // 未登录，按照当前位置经纬度请求 estDelivery 接口
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition((position) => {
                         this.$fetch('estDelivery', {
@@ -308,6 +312,19 @@
         destroyed() {
             this.detailSwiper && this.detailSwiper.removeAllSlides()
             this.$NProgress.remove()
+        }
+
+        changeRegion(region){
+            // 选择新地址：按照新地址请求 estDelivery 接口
+            let { province_id, city_id, district_id, area_id } = region
+            this.$fetch('estDelivery', {
+                province_id,
+                city_id,
+                district_id,
+                area_id
+            }).then(res => {
+                this.deliveryData = res.data
+            })
         }
 
         // 变更收货地址
