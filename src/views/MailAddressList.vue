@@ -51,7 +51,7 @@
     import Vue from 'vue'
     import {Component, Prop} from "vue-property-decorator";
     import Title from "@/components/Title.vue"
-    import fetch from "@/api/fetch";
+    import Address from "@/api/address";
 
     Component.registerHooks([
         'beforeRouteEnter',
@@ -69,7 +69,7 @@
                 next((vm: any) => vm.getList())
             } else {
                 // 路由切换
-                fetch('addressList', {}).then(res => {
+                Address.list().then(res => {
                     next((vm: any) => vm.setList(res))
                 })
             }

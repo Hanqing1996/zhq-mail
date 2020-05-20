@@ -80,7 +80,7 @@
     @Component({components: {Title,AddressAll}})
     export default class MailAddressEdit extends Vue {
 
-        showRegions=true
+        showRegions=false
         addressInfo = {
             consignee: '',
             tel: '',
@@ -117,18 +117,22 @@
                 } else {
                     console.log('trigger');
                     // 路由切换
-                    fetch('addressView', {
-                        address_id: id
-                    }).then(res => {
+                    Address.view(id).then(res => {
                         next((vm: any) => vm.setAddress(res))
                     })
                 }
-            } else
-            next()
+            } else{
+                next()
+            }
+        }
+
+        created(){
+            if(!this.$route.query.address_id){
+                this.showRegions=true
+            }
         }
 
         changeRegion (region:any) {
-            console.log(this.addressInfo);
             this.addressInfo = Object.assign({}, this.addressInfo, region)
         }
 
@@ -144,7 +148,6 @@
             let info = res.data
             info.is_default = info.is_default == 1
             this.addressInfo = res.data
-            console.log(this.addressInfo);
             this.$store.commit('setViewLoading', false)
             this.$NProgress.done()
 
