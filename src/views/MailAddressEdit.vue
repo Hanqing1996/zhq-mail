@@ -70,17 +70,17 @@
 
 
     interface AddressObject {
-        [key:string]:any
+        [key: string]: any
     }
 
     import Address from '@/api/address.ts'
 
-    const myAddress:AddressObject=Address
+    const myAddress: AddressObject = Address
 
-    @Component({components: {Title,AddressAll}})
+    @Component({components: {Title, AddressAll}})
     export default class MailAddressEdit extends Vue {
 
-        showRegions=false
+        showRegions = false
         addressInfo = {
             consignee: '',
             tel: '',
@@ -121,25 +121,24 @@
                         next((vm: any) => vm.setAddress(res))
                     })
                 }
-            } else{
+            } else {
                 next()
             }
         }
 
-        created(){
-            if(!this.$route.query.address_id){
-                this.showRegions=true
+        created() {
+            if (!this.$route.query.address_id) {
+                this.showRegions = true
             }
         }
 
-        changeRegion (region:any) {
+        changeRegion(region: any) {
             this.addressInfo = Object.assign({}, this.addressInfo, region)
         }
 
         getAddress() {
-            this.$fetch('addressView', {
-                address_id: this.$route.query.address_id
-            }).then(res => {
+
+            Address.view(this.$route.query.address_id).then(res => {
                 this.setAddress(res)
             })
         }
@@ -160,7 +159,7 @@
         submit() {
             // 校验
             let api = this.$route.query.address_id ? 'save' : 'add'
-            myAddress[api](this.addressInfo).then((res:any) => {
+            myAddress[api](this.addressInfo).then((res: any) => {
                 this.$router.go(-1)
             })
         }

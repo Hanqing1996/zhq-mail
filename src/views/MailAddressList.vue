@@ -75,7 +75,7 @@
             }
         }
         getList() {
-            this.$fetch('addressList', {}).then(res => {
+            Address.list().then(res => {
                 this.setList(res)
             })
         }
