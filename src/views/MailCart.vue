@@ -121,7 +121,7 @@
                         <span>元</span>
                     </div>
                     <a href="/category" class="btn disable black flex">继续购物</a>
-                    <a class="btn flex">去结算</a>
+                    <router-link :to="{name: 'orderCheckout'}" class="btn flex" style="color: white">去结算</router-link>
                 </div>
                 <div class="insurance-pop">
                     <div class="ui-mask" v-if="showServiceInfo"></div>

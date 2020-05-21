@@ -10,9 +10,9 @@ const MailDetail =()=>import("@/views/MailDetail.vue")
 const MailList =()=>import("@/views/MailList.vue")
 const MailSetting =()=>import("@/views/MailSetting.vue")
 const MailAddressEdit =()=>import("@/views/MailAddressEdit.vue")
-const OrderCheckout =()=>import("@/views/order/OrderCheckout.vue")
-const OrderList =()=>import("@/views/order/OrderList.vue")
-const OrderView =()=>import("@/views/order/OrderView.vue")
+const OrderCheckout =()=>import("@/views/OrderCheckout.vue")
+const OrderList =()=>import("@/views/OrderList.vue")
+const OrderView =()=>import("@/views/OrderView.vue")
 
 
 Vue.use(VueRouter)
@@ -75,7 +75,7 @@ const routes =[
     name: 'set',
     component: MailSetting,
     meta: {
-      //requiresAuth: true
+      requiresAuth: true
     }
   },
   {
@@ -83,7 +83,7 @@ const routes =[
     name: 'addressList',
     component: MailAddressList,
     meta: {
-      //requiresAuth: true
+      requiresAuth: true
     }
   },
   {
@@ -91,7 +91,7 @@ const routes =[
     name: 'addressEdit',
     component: MailAddressEdit,
     meta: {
-      //requiresAuth: true
+      requiresAuth: true
     }
   },
   {

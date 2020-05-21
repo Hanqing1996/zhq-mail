@@ -16,8 +16,8 @@
     @Component({
         components: {Skeleton},
 
-        computed: {...mapState(['viewLoading','transitionName'])},
-        methods: {...mapMutations(['setTransitionName']),...mapActions(['getUserInfo'])}
+        computed: {...mapState(['viewLoading','transitionName']),...mapState({cartCount:state=>state.cart.count})},
+        methods: {...mapMutations(['setTransitionName']),...mapActions(['getUserInfo']),...mapActions('cart', ['getCount'])}
     })
     export default class App extends Vue {
 
@@ -36,6 +36,10 @@
         created(){
             // 打开应用时，自动登录，我觉得这太sb了，注释掉
             //this.getUserInfo()
+
+            this.getCount(()=>{
+                console.log(this.cartCount);
+            })
 
         }
     }

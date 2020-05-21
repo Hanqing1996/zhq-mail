@@ -174,7 +174,7 @@ router.beforeEach((to, from, next) => {
 })
 ```
 ```
-// 类似：router-link 的 redirect 传递
+// 类似：router-link 的 redirect 传递。注意上面是想访问某个页面必须先登录，下面是直接跳转到登录页面。相同点是都必须传入 redirect 数据
 
 // MailCart 登录入口
 <router-link class="flex" :to="{name: 'login',query:{redirect:'/cart'}}" tag="em">去登录</router-link>
@@ -689,10 +689,64 @@ servicesSelected.delete(服务)
 <input v-model.trim.number="addressInfo.tel"  placeholder="手机号" name="tel">
 ```
 
-#### vuex 应该管理哪些数据
-> 跨页面的数据，比如地址列表（addressList,detail）,用户信息，加载状态，是否登录
+#### 【vuex】store 的数据管理
+* 应该管理哪些数据
+> 跨页面的数据，比如地址列表，用户信息，加载状态，是否登录，购物车数量
 * 不应该管理的数据
 > 比如 showPop 之类的UI数据，或只在某个组件中出现的数据
 
+#### 【vuex】store 的 actions 和 mutations 的区别
+* actions 一般用于异步请求
+* mutations 一般用于写 state
+```
+export default{
+    state: {
+        count: 0
+    },
+    mutations: {
+        setCount(state, count) {
+            state.count = count
+        }
+    },
+    actions: {
+        getAddressList({commit}, callback) {
+            Cart.count().then((res: any) => {
+                commit('setCount', res.data)
+                callback()
+            })
+        }
+    }
+}
+```
+* 之后直接在相关页面进行全局数据的读写（不再用 prop 以及 on,emit）
 
-#### 
+#### 在打包（yarn build）时避免将 mock 数据打包
+* [模式](https://cli.vuejs.org/zh/guide/mode-and-env.html#%E6%A8%A1%E5%BC%8F)
+```
+@/api/fetch.ts
+
+import axios from 'axios'
+import url from './index'
+
+function fetch (api:string, data:object) {
+  return new Promise((resolve, reject) => {
+    axios.post(url[api], data).then(res => {
+
+      // 各种业务处理
+      resolve(res.data)
+    }).catch(err => {
+      // 只在开发环境下
+      if (process.env.NODE_ENV === 'production') {
+        reject(err)
+      } else {
+        let mock = require('../mock/index.js')
+        resolve(mock[api])
+      }
+    })
+  })
+}
+
+export default fetch
+```
+
+

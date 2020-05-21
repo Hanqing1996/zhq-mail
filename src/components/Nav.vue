@@ -9,14 +9,14 @@
                     :to="{name: nav.link}">
                 <i class="iconfont" :class="nav.link==$route.name?nav.iconon:nav.icon"></i>
                 <span>{{nav.name}}</span>
-<!--                <em v-if="nav.link=='cart'&&count" class="bubble">{{count}}</em>-->
+                <em v-if="nav.link=='cart'&&cartCount" class="bubble">{{cartCount}}</em>
             </router-link>
         </div>
     </footer>
 </template>
 
 <script lang="ts">
-    import { mapState } from 'vuex'
+    import {mapActions, mapMutations, mapState} from 'vuex'
     const navigation = [
         {
             name: '首页',
@@ -45,13 +45,17 @@
     ]
     import Vue from 'vue'
     import {Component, Prop} from "vue-property-decorator";
+    import Skeleton from "@/components/Skeleton.vue";
 
-    @Component
+
+
+    @Component({
+        computed: {...mapState({cartCount:state=>state.cart.count})},})
     export default class Nav extends Vue {
         navigation=navigation
     }
 </script>
-<style scoped lang="scss">
+<style >
     .app-shell-footer {
         position: fixed;
         z-index: 9999;
@@ -87,7 +91,25 @@
     .flex span {
         font-size: 12px;
     }
+    .bubble {
+        position: absolute;
+        min-width: 14px;
+        line-height: 14px;
+        height: 14px;
+        box-sizing: border-box;
+        padding: 0 3px;
+        font-size: 10px;
+        overflow: hidden;
+        text-align: center;
+        border-radius: 10px;
+        background: #ed4d41;
+        color: #fff;
+        top: 0;
+        left: 50%;
+        transform: translate3d(50px,10%,0);
+        font-style: normal;
+    }
     .on {
-        color: #ff6700;
+        color: $theme_color;
     }
 </style>

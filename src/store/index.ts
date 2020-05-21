@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import fetch from '@/api/fetch.ts'
 import addressModule from "@/store/modules/address";
+import cartModule from "@/store/modules/cart";
 
 Vue.use(Vuex)
 
@@ -41,6 +42,10 @@ export default new Vuex.Store({
     address:{
       namespaced:true,
       ...addressModule
+    },
+    cart:{
+      namespaced:true,
+      ...cartModule
     }
   }
 })

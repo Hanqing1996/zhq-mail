@@ -5,7 +5,7 @@
                 <div class="container fluid">
                     <header>
                         <div class="fill-height layout align-center">
-                            <a class="header-btn">
+                            <a class="header-btn" @click="back">
                                 <i class="iconfont icon-back"></i>
                             </a>
                             <div class="placeholder"></div>
@@ -235,7 +235,8 @@
 
     @Component({
         components: {Comment, MailRecommend, MailSKU, MailPop,AddressAll},
-        computed: {...mapGetters(['isLogin']),...mapState({addressList:state=>state.address.list}),...mapGetters({defaultAddress: 'address/default'})},
+
+        computed: {...mapState({cartCount:state=>state.cart.count}),...mapGetters(['isLogin']),...mapState({addressList:state=>state.address.list}),...mapGetters({defaultAddress: 'address/default'})},
 
         //computed: {...mapGetters(['isLogin'])},
         methods: {...mapActions('address', ['getAddressList'])}
@@ -312,6 +313,10 @@
         destroyed() {
             this.detailSwiper && this.detailSwiper.removeAllSlides()
             this.$NProgress.remove()
+        }
+
+        back(){
+            this.$router.go(-1)
         }
 
         changeRegion(region){

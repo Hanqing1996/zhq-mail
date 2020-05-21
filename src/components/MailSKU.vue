@@ -88,7 +88,7 @@
 
 
             <div class="btn-bottom">
-                <div class="action-box flex" >
+                <div class="action-box flex" @click="addTocart">
                     <a data-log_code="" class="btn buy-btn" >加入购物车</a>
                 </div>
             </div>
@@ -99,14 +99,26 @@
 <script lang="ts">
     import Vue from 'vue'
     import {Component, Prop} from "vue-property-decorator";
+    import Skeleton from "@/components/Skeleton.vue";
+    import {mapActions, mapMutations, mapState} from "vuex";
 
-    @Component
+    @Component({
+        components: {Skeleton},
+
+        computed: {...mapState({cartCount:state=>state.cart.count})},
+        methods: {...mapMutations('cart', ['setCount'])}
+    })
     export default class MailSKU extends Vue {
         @Prop(Boolean) readonly showSKU!: boolean
         @Prop(Object) readonly selectedGood!: object
         @Prop(Array) readonly buyOption!: Array<Object>
 
         closeSKU(){
+            this.$emit('update:showSKU',false)
+        }
+
+        addTocart(){
+            this.setCount(this.cartCount+1)
             this.$emit('update:showSKU',false)
         }
     }
